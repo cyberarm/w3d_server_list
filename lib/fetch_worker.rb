@@ -10,44 +10,68 @@ class W3DServerList
     ].freeze
 
     def perform
-      Async do
-        # Schedule next run before crashy code
-        W3DServerList::FetchWorker.perform_in(5 * 60) # Update every 5 minutes
+      # Schedule next run before crashy code
+      W3DServerList::FetchWorker.perform_in(5 * 60) # Update every 5 minutes
 
 
-        # fetch server list
-        # parse
+      # fetch server list
+      # parse
+      server_list = nil
+
+      Sync do
         server_list = fetch_server_list
+      end
 
-        return unless server_list
+      return unless server_list
 
-        server_list.each { |server| server[:status][:numplayers] ||= 0 }
+      server_list.each { |server| server[:status][:numplayers] ||= 0 }
 
-        W3DServerList::MemStore.data[:server_list] = server_list.sort_by { |server| server[:status][:numplayers] }.reverse
-        W3DServerList::MemStore.data[:server_list_updated_at] = Time.now.utc
+      W3DServerList::MemStore.data[:server_list] = server_list.sort_by { |server| server[:status][:numplayers] }.reverse
+      W3DServerList::MemStore.data[:server_list_updated_at] = Time.now.utc
 
-        # ActiveRecord::Base.connection_pool.with_connection do
-          # server_list.each do |server|
-            # create missing servers
-            # update servers
-            # generate and save report
-          # end
-        # end
+      return if ENV["RACK_ENV"] == "development"
+
+      ActiveRecord::Base.connection_pool.with_connection do
+        server_list.each do |server|
+          ActiveRecord::Base.transaction do
+            model = Server.find_by(uid: server[:id])
+            model ||= Server.create(
+              uid: server[:id],
+              hostname: server[:status][:name],
+              game: server[:game],
+              address: server[:address],
+              port: server[:port]
+            )
+
+            Report.create(
+              server_id: model.id,
+              map_name: server[:status][:map],
+              player_count: server[:status][:numplayers] || 0,
+              started_at: server[:status][:started],
+              remaining: server[:status][:remaining]
+            )
+          end
+        end
       end
     end
 
     def fetch_server_list
-      # request = Excon.get(END_POINT, HEADERS)
-      # pp request
+      _cache_path = "_server_list_2.json"
 
-      # JSON.parse(request.body, symbolize_names: true) if request && request.response == 200
+      return JSON.parse(File.read(_cache_path), symbolize_names: true) if ENV["RACK_ENV"] == "development" && File.exist?(_cache_path)
 
       client = Async::HTTP::Client.new(
         Async::HTTP::Endpoint.parse(END_POINT, protocol: Async::HTTP::Protocol::HTTP11)
       )
 
       response = client.get(END_POINT, DEFAULT_HEADERS)
-      JSON.parse(response.read, symbolize_names: true) if response.success?
+
+      return [] unless response.success?
+
+      body = response.read
+      File.write(_cache_path, body) if ENV["RACK_ENV"] == "development"
+
+      JSON.parse(body, symbolize_names: true)
     end
   end
 end
