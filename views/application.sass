@@ -1,0 +1,616 @@
+$nod_color: #800000
+$gdi_color: #ff8800
+
+$primary_color: #620
+$secondary_color: green
+$accent_color: gold
+
+$large_screen: 1200px
+$large_content_width: 1140px
+$normal_screen: 992px
+$normal_content_width: 960px
+$tablet_screen: 768px
+$tablet_content_width: 720px
+$small_screen: 576px
+$small_content_width: 540px
+
+*
+  margin: 0px
+  box-sizing: border-box
+
+body
+  color: white
+  font-family: sans-serif
+  background: #252525
+
+header
+  display: flex
+  align-items: center
+  flex-flow: row nowrap
+  justify-content: flex-start
+  padding: 1em
+  background: $primary_color
+  box-shadow: 0 0 3px black
+  ul
+    display: flex
+    flex-flow: row
+    flex-direction: row
+    padding-left: 0px
+    li
+      &:not(:first-child)
+        padding-left: 1em
+  .container
+    display: flex
+    align-items: center
+    justify-content: space-between
+    flex-wrap: wrap
+  .nav_label
+    color: white
+    font-size: 1.25em
+    font-weight: bold
+    margin-right: 1rem
+  .navbar
+    display: flex
+    flex: 1
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+  .navbar_toggler
+    display: none
+    cursor: pointer
+    padding: 0.5em 1em
+    border: solid 1px rgba(0, 0, 0, 0.5)
+    @media screen and (max-width: $normal_screen)
+      display: block
+  #menu_toggle
+    display: none
+    &:not(:checked) ~ .navbar
+      @media screen and (max-width: $normal_screen)
+        display: none
+    &:checked ~ .navbar
+      @media screen and (max-width: $normal_screen)
+        display: flex
+        flex-direction: column
+        flex-basis: 100%
+        align-items: flex-start
+    &:checked ~ .navbar ul
+      @media screen and (max-width: $normal_screen)
+        flex-direction: column
+        align-items: flex-start
+    &:checked ~ .navbar ul li
+      @media screen and (max-width: $normal_screen)
+        line-height: 3rem
+    &:checked ~ .navbar ul li:not(:first-child)
+      @media screen and (max-width: $normal_screen)
+        padding: 0
+
+
+
+main
+  // padding-top: 3em
+  padding-bottom: 3em
+  // background: #575757
+
+footer
+  text-align: center
+  padding: 1em
+  padding-bottom: 6em
+  // background: #440044
+  ul
+    display: flex
+    flex-flow: row
+    flex-wrap: wrap
+    flex-direction: row
+    justify-content: center
+    padding-left: 0px
+    margin-top: 10px
+    li
+      &:not(:first-child)
+        padding-left: 1em
+
+h2
+  padding: 0 0 0.5em 0
+  border-bottom: 1px solid #444
+
+a
+  color: $accent_color
+  text-decoration: none
+  &:hover
+    color: lighten($accent_color, 5%)
+    text-decoration: underline
+  &:active
+    color: lighten($accent_color, 5%)
+    text-decoration: underline
+
+ul
+  list-style: none
+
+dl
+  margin-top: 0
+  margin-bottom: 1rem
+  dt
+    font-weight: normal
+  dd
+    font-weight: bold
+    margin-bottom: 1rem
+
+input[type=text], input[type=email], input[type=password], input[type=checkbox], input[type=submit], input[type=search], select, textarea
+  border-radius: 5pt
+  border: 1px solid rgba(0, 0, 0, 0.75)
+  padding: 0.5em
+  &:focus
+    position: relative
+    z-index: 2
+    outline: none
+    box-shadow: 0px 0px 3px $accent_color
+input[type=button], input[type=submit]
+  cursor: pointer
+
+content
+  flex: 0 0 75%
+  max-width: 75%
+  padding-right: 1em
+  @media screen and (max-width: $tablet_screen)
+    flex: 0 0 100%
+    max-width: 100%
+
+sidebar
+  flex: 0 0 25%
+  max-width: 25%
+  padding-left: 0.5em
+  padding-right: 1em
+  @media screen and (max-width: $tablet_screen)
+    flex: 0 0 100%
+    max-width: 100%
+
+#overlay
+  z-index: 1000
+  display: none
+  position: fixed
+  top: 0
+  left: 0
+  width: 100%
+  height: 100%
+  background: rgba(100, 100, 100, 0.9)
+#overlay_message
+  margin: 3em auto
+  display: block
+  width: 100%
+  max-width: 330px
+  min-height: 330px
+  padding: 1em
+  border-radius: .25em
+  background: #353535
+
+.container
+  // background: rgba(100, 100, 100, 50)
+  margin: 0 auto
+  padding-left: 15px
+  padding-right: 15px
+  width: 100%
+  max-width: 540px
+  @media screen and (min-width: $small_screen)
+    max-width: $small_content_width
+  @media screen and (min-width: $tablet_screen)
+    max-width: $tablet_content_width
+  @media screen and (min-width: $normal_screen)
+    max-width: $normal_content_width
+  @media screen and (min-width: $large_screen)
+    max-width: $large_content_width
+
+.white_links
+  a
+    color: #ddd
+    text-decoration: none
+    &:hover
+      color: #fff
+    &:active
+      color: #fff
+
+.form
+  text-align: center
+  margin: 0 auto
+  width: 100%
+  max-width: 330px
+  input, select, textarea
+    width: 100%
+    font-size: 16px
+    padding: 1em
+    display: block
+    margin-bottom: -1px
+    border-radius: 0px
+  input[type=checkbox]
+    width: auto
+    display: inline-block
+    margin-top: 1em
+  input[type=submit], input[type=button]
+    border-radius: 5pt
+  input[type=submit]
+    margin-top: 1em
+    margin-bottom: 1em
+    width: 100%
+    background: $primary_color
+    color: white
+    &:hover
+      background: darken($primary_color, 5%)
+  .first_input
+    border-top-left-radius: 5pt
+    border-top-right-radius: 5pt
+  .last_input
+    border-bottom-left-radius: 5pt
+    border-bottom-right-radius: 5pt
+
+.dropzone
+  cursor: pointer
+  width: 100%
+  margin-top: 1em
+  padding: 1em
+  border: solid 1px black
+  border-radius: 5pt
+  background-color: #353535
+
+.screen_reader_only
+  border: 0
+  clip: rect(0, 0, 0, 0)
+  height: 1px
+  margin: -1px
+  overflow: hidden
+  padding: 0
+  position: absolute
+  width: 1px
+
+.dropdown
+  position: relative
+  display: inline-block
+  padding: 16px
+  &:hover .dropdown_content
+    display: block
+
+.dropdown_content
+  z-index: 1000
+  display: none
+  position: absolute // TODO: static for mobile menu
+  min-width: 10rem //100%
+  overflow: auto
+  background: $secondary_color
+  padding: 1em
+  margin-top: 8px
+  border: solid 1px $primary_color
+  border-radius: 5pt
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2)
+  right: 0
+  left: auto
+  @media screen and (max-width: $normal_screen)
+    position: static
+  li
+    padding-left: 0 !important
+    line-height: 3rem
+    a
+      display: block
+
+.icon
+  height: 1.75em
+
+.caret
+  height: 1rem
+
+.avatar
+  border-radius: 50%
+
+.user_photo
+  width: 64px
+  height: 64px
+  border-radius: 50%
+  border: solid 1px rgba(255, 255, 255, 0.1)
+  margin-right: 28px
+
+.package_header
+  background-size: cover
+  background-repeat: no-repeat
+  background-position: center
+  padding-bottom: 1em
+
+.package_title
+  padding-top: 1em
+  padding-bottom: 0.5em
+  font-size: 5rem
+  word-wrap: break-word
+
+.package_screenshot
+  padding: 0
+  display: inline-block
+  margin: 5px
+  width: 200px
+  height: 133px
+
+.package_tile
+  list-style: none
+  padding: 0
+  margin: 0 7px 7px 0
+  min-width: 250px
+  a
+    display: block
+    position: relative
+    padding-bottom: 66.66%
+    border-radius: 3px
+    overflow: hidden
+    backgorund-size: cover
+    background-repeat: no-repeat
+    background-position: center
+    &:hover
+      p
+        display: block
+      .package_grid_scrub
+        top: 0
+        background: rgba(0, 0, 0, 0.8)
+      .package_grid_info
+        top: 0
+
+.package_grid_scrub
+  position: absolute
+  top: 50%
+  right: 0
+  bottom: 0
+  left: 0
+  padding: 5px
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.5))
+
+.package_grid_info
+  position: absolute
+  right: 0
+  left: 0
+  bottom: 0
+  padding: 1em
+  h3
+    color: white
+    font-size: 120%
+    font-weight: bold
+    margin: 0
+    padding: 0
+  p
+    display: none
+    color: #ddd
+    font-weight: normal
+
+.spinner
+  @keyframes rotation
+    from
+      transform: rotate(0deg)
+    to
+      transform: rotate(359deg)
+
+  animation: rotation 5s linear infinite
+  max-width: 100%
+  max-height: auto
+
+.badge
+  display: inline-block
+  padding: .25em .4em
+  font-size: 75%
+  font-weight: 700
+  line-height: 1
+  text-align: center
+  white-space: nowrap
+  vertical-align: baseline
+  border-radius: .25em
+  text-decoration: none
+  &:not(:first-child)
+    margin-left: .25em
+  &:hover
+    text-decoration: none
+  &:active
+    text-decoration: none
+
+.badge_primary
+  color: white
+  background: $primary_color
+  &:hover
+    color: white
+    background: darken($primary_color, 10%)
+  &:active
+    color: white
+
+.badge_secondary
+  color: white
+  background: #353535
+  &:hover
+    color: white
+    background: darken(#353535, 10%)
+  &:active
+    color: white
+
+.row
+  display: flex
+  flex-wrap: wrap
+  flex-direction: row
+
+.btn_group
+  >.btn:not(:first-child)
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+  >.btn:first-child
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+  >.btn:not(:first-child):not(:last-child)
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+
+.btn
+  padding: .375rem .75rem
+  text-align: center
+  display: inline-block
+  border-radius: .25em
+
+.btn_primary
+  color: white !important
+  background-color: $primary_color
+  &:hover
+    background-color: darken($primary_color, 10%)
+
+.btn_secondary
+  color: white !important
+  background-color: #353535
+  &:hover
+    background-color: darken(#353535, 10%)
+
+.btn_download
+  color: white !important
+  background-color: $accent_color
+  &:hover
+    background-color: darken($accent_color, 10%)
+
+.btn_danger
+  color: white !important
+  background-color: #800
+  &:hover
+    background-color: darken(#800, 10%)
+
+.btn_disabled
+  pointer-events: none
+  color: white !important
+  background-color: darkgray
+
+.disabled
+  pointer-events: none
+
+.list_group
+  display: flex
+  flex-direction: column
+  >.list_item:first-child
+    border-bottom-left-radius: 0
+    border-bottom-right-radius: 0
+    border-bottom: none
+  >.list_item:last-child
+    border-top-left-radius: 0
+    border-top-right-radius: 0
+  >.list_item:not(:first-child):not(:last-child)
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+    border-bottom: none
+
+.list_item
+  border-radius: .25em
+  border: 1px solid black
+  background-color: #353535
+  display: block
+  position: relative
+  padding: 1em
+  &:hover
+    background-color: lighten(#353535, 10%)
+
+.float_right
+  float: right
+
+.float_left
+  float: left
+
+.nr_radius
+  border-top-right-radius: 0 !important
+  border-bottom-right-radius: 0 !important
+.nl_radius
+  border-top-left-radius: 0 !important
+  border-bottom-left-radius: 0 !important
+
+.center
+  text-align: center
+
+.fva
+  display: flex
+  align-items: center
+
+.fno_wrap
+  flex-wrap: nowrap
+
+.afs
+  align-self: flex-start
+
+.flex_fill
+  flex: 1 1 auto !important
+
+.np
+  padding: 0 0 0 0 !important
+
+.p3
+  padding-top: 3em
+
+.ap1
+  padding: 0em 0.5em 0em 0.5em
+
+.m1
+  margin-top: 1em
+
+.m3
+  margin-top: 3em
+
+.sp1
+  &:not(:first-child)
+    padding-left: 1em
+
+.sm1
+  &:not(:first-child)
+    margin-left: 1em
+
+.g1
+  flex-grow: 1
+
+.g0
+  flex-grow: 0
+
+.space_around
+  justify-content: space-around
+
+.space_between
+  justify-content: space-between
+
+.upload_preview
+  width: 100%
+  max-width: 330px
+  border-radius: 5pt
+
+.card
+  background: #353535
+  padding: 1em
+  border: 1px rgba(0, 0, 0, 0.25) solid
+  border-radius: .25em
+
+
+
+.si_game
+  flex: 0 0 10%
+  @media screen and (max-width: $small_screen)
+    display: none
+.si_hostname
+  // flex: 0 0 40%
+  // @media screen and (max-width: $small_screen)
+  //   flex: 0 0 90%
+.si_mapname
+  flex: 0 0 40%
+  @media screen and (max-width: $small_screen)
+    display: none
+.si_player_count
+  flex: 0 0 10%
+  text-align: center
+
+.pi_team
+  flex: 0 0 15%
+.pi_nickname
+.pi_score
+  flex: 0 0 10%
+  text-align: center
+.pi_kills
+  flex: 0 0 10%
+  text-align: center
+  @media screen and (max-width: $small_screen)
+    display: none
+.pi_deaths
+  flex: 0 0 10%
+  text-align: center
+  @media screen and (max-width: $small_screen)
+    display: none
+.pi_kd_ratio
+  flex: 0 0 20%
+  text-align: center

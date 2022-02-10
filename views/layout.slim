@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+html lang="en"
+  head
+    meta charset="UTF-8"
+    meta http-equiv="X-UA-Compatible" content="IE=edge"
+    meta name="viewport" content="width=device-width, initial-scale=1.0"
+    link rel="stylesheet" href="/css/application.css" type="text/css"
+    link rel="shortcut icon" href="/favicon-256.png"
+    - if yield_content(:page_title).to_s.length.positive?
+      title #{yield_content(:page_title)} — W3D Server List
+    - else
+      title W3D Server List
+
+  body
+    header
+      .container.white_links
+        a.nav_label href="/" W3D Server List
+
+        label.btn.btn_primary.navbar_toggler for="menu_toggle"
+          img.icon src="/icons/barsHorizontal.png"
+        input#menu_toggle type="checkbox"
+
+        .navbar
+          ul
+            li Servers: #{W3DServerList::MemStore.data[:server_list].count}
+            li Players: #{W3DServerList::MemStore.data[:server_list].map { |s| s[:status][:numplayers] }.sum }
+
+    main
+      .error.center
+        p=flash[:error]
+        p=flash[:alert]
+        p=flash[:notice]
+      == yield
+
+    footer
+      .container
+        p W3D Server List &copy; 2022-#{Time.now.year} to <a href="https://cyberarm.dev" target="_developer_website">cyberarm</a>
+        ul
+          li
+            a href="https://github.com/cyberarm/w3d_server_list" target="_source_code" Source Code
+
+  / script src="/js/opal.min.js"
+  / script src="/js/application.js"
