@@ -1,6 +1,6 @@
 class W3DServerList
   class App < Sinatra::Application
-    def player_count(uid, mode = :week)
+    def player_count(uid, range = :week, mode = :average)
       days = [
         Array.new(24) { [] }, # sunday
         Array.new(24) { [] }, # monday
@@ -15,7 +15,7 @@ class W3DServerList
 
       return [] unless server
 
-      reports = Report.all.where(server_id: server.id, created_at: 1.send(mode).ago..Time.now.utc)
+      reports = Report.all.where(server_id: server.id, created_at: 1.send(range).ago..Time.now.utc)
 
       reports.each do |report|
         next if report.map_name.empty? # Don't count map transitions as player count is normally 0
@@ -25,9 +25,13 @@ class W3DServerList
 
       days.each_with_index do |day, di|
         day.each_with_index do |hour, hi|
-          avg = hour.sum / hour.size.to_f
+          if mode == :average
+            avg = hour.sum / hour.size.to_f
 
-          days[di][hi] = avg.nan? ? nil : avg.round
+            days[di][hi] = avg.nan? ? nil : avg.round
+          elsif mode == :max
+            days[di][hi] = hour.max
+          end
         end
       end
 

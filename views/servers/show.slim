@@ -39,11 +39,11 @@
 
   h2.m3.center Players Over Time (week)
   div
-    canvas id="players_over_time" data-data="#{player_count(@server[:id], :week)}"
+    canvas id="players_over_time" data-data="#{player_count(@server[:id], :week, :max)}"
 
   h2.m3.center Average Players Over Time (month)
   div
-    canvas id="average_players_over_time" data-data="#{player_count(@server[:id], :month)}"
+    canvas id="average_players_over_time" data-data="#{player_count(@server[:id], :month, :average)}"
 
 script src="https://cdn.jsdelivr.net/npm/chart.js"
 javascript:
