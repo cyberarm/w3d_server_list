@@ -4,8 +4,8 @@ html lang="en"
     meta charset="UTF-8"
     meta http-equiv="X-UA-Compatible" content="IE=edge"
     meta name="viewport" content="width=device-width, initial-scale=1.0"
-    link rel="stylesheet" href=url("/css/application.css") type="text/css"
-    link rel="shortcut icon" href=url("/favicon-256.png")
+    link rel="stylesheet" href="#{url("/css/application.css")}" type="text/css"
+    link rel="shortcut icon" href="#{url("/favicon-256.png")}"
     - if yield_content(:page_title).to_s.length.positive?
       title #{yield_content(:page_title)} — W3D Server List
     - else
