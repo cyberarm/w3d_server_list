@@ -130,6 +130,8 @@ GEM
       temple (>= 0.7.6, < 0.9)
       tilt (>= 2.0.6, < 2.1)
     sqlite3 (1.4.2)
+    sucker_punch (3.0.1)
+      concurrent-ruby (~> 1.0)
     temple (0.8.2)
     tilt (2.0.10)
     timers (4.3.3)
@@ -141,6 +143,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  async-http
   falcon
   kaminari
   rake
@@ -151,6 +154,7 @@ DEPENDENCIES
   sinatra-flash
   slim
   sqlite3
+  sucker_punch
 
 BUNDLED WITH
    2.2.19
