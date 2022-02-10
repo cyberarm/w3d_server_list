@@ -12,7 +12,7 @@
           span.si_mapname Map Name
           span.si_player_count Player Count
       - W3DServerList::MemStore.data[:server_list].each do |server|
-        a.list_item href="/server/#{server[:id]}"
+        a.list_item href=url("/server/#{server[:id]}")
           .row.fno_wrap
             span.si_game=server[:game]
             span.si_hostname.g1=server[:status][:name]
