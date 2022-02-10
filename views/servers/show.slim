@@ -37,7 +37,7 @@
           span.pi_deaths=player[:deaths]
           span.pi_kd_ratio=kd_ratio(player)
 
-  h2.m3.center Players Over Time (week)
+  h2.m3.center Peak Players Over Time (week)
   div
     canvas id="players_over_time" data-data="#{player_count(@server[:id], :week, :max)}"
 
