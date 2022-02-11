@@ -9,11 +9,15 @@
         .row.fno_wrap
           span.si_game Game
           span.g1 Map Name
+          span.si_time Time
+          span.si_time_left Time Left
           span.si_player_count Player Count
       .list_item
         .row.fno_wrap
           span.si_game=@server[:game]
           span.g1=@server[:status][:map]
+          span.si_time=server_match_time(@server)
+          span.si_time_left=@server[:status][:remaining]
           span.si_player_count #{@server[:status][:numplayers]}/#{@server[:status][:maxplayers]}
 
   h2.m3.center Players

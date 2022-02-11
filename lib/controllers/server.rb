@@ -1,5 +1,15 @@
 class W3DServerList
   class App < Sinatra::Application
+    def server_match_time(server)
+      diff = Time.now.to_i - Time.parse(server[:status][:started]).to_i
+
+      hours   = diff / (1000 * 60 * 60)
+      minutes = diff / (1000 * 60) % 60
+      seconds = diff /  1000 % 60
+
+      format("%02d:%02d:%02d", hours.round, minutes.round, seconds.round)
+    end
+
     def player_count(uid, range = :week, mode = :average)
       days = [
         Array.new(24) { [] }, # sunday
@@ -25,17 +35,18 @@ class W3DServerList
 
       days.each_with_index do |day, di|
         day.each_with_index do |hour, hi|
-          if mode == :average
+          case mode
+          when :average
             avg = hour.sum / hour.size.to_f
 
             days[di][hi] = avg.nan? ? nil : avg.round
-          elsif mode == :max
+          when :max
             days[di][hi] = hour.max
           end
         end
       end
 
-      days.map(&:to_s).flatten.join(",")
+      days.flatten.map { |v| v.nil? ? "nil" : v.to_s }.join(",")
     end
   end
 end

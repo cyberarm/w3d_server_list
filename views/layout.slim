@@ -16,14 +16,13 @@ html lang="en"
       .container.white_links
         a.nav_label href=url("/") W3D Server List
 
-        label.btn.btn_primary.navbar_toggler for="menu_toggle"
-          img.icon src="/icons/barsHorizontal.png"
-        input#menu_toggle type="checkbox"
+        / label.btn.btn_primary.navbar_toggler for="menu_toggle"
+        /   img.icon src="/icons/barsHorizontal.png"
+        / input#menu_toggle type="checkbox"
 
-        .navbar
-          ul
-            li Servers: #{W3DServerList::MemStore.data[:server_list].count}
-            li Players: #{W3DServerList::MemStore.data[:server_list].map { |s| s[:status][:numplayers] }.sum }
+        ul
+          li Servers: #{W3DServerList::MemStore.data[:server_list].count}
+          li Players: #{W3DServerList::MemStore.data[:server_list].map { |s| s[:status][:numplayers] }.sum }
 
     main
       .error.center
