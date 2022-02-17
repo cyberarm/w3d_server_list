@@ -19,14 +19,12 @@ require "sinatra/activerecord"
 
 require_relative "memstore"
 require_relative "fetch_worker"
+require_relative "repair_worker"
 
 require_relative "controllers/server"
 
 require_relative "models/server"
 require_relative "models/report"
-
-# Start data collection worker
-W3DServerList::FetchWorker.perform_async
 
 class W3DServerList
   NET_HOST = "localhost"
@@ -59,6 +57,12 @@ class W3DServerList
     configure :development do
       register Sinatra::Reloader
     end
+
+    # Start data collection worker
+    W3DServerList::FetchWorker.perform_async
+
+    # Repair incorrectly creating a new server when its uid changes on game server restart
+    W3DServerList::RepairWorker.perform_async
 
     not_found do
       slim :"errors/404"

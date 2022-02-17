@@ -34,14 +34,19 @@ class W3DServerList
       ActiveRecord::Base.connection_pool.with_connection do
         server_list.each do |server|
           ActiveRecord::Base.transaction do
-            model = Server.find_by(uid: server[:id])
-            model ||= Server.create(
-              uid: server[:id],
-              hostname: server[:status][:name],
-              game: server[:game],
-              address: server[:address],
-              port: server[:port]
-            )
+            model = Server.find_by(uid: server[:id]) || Server.find_by(address: server[:address], port: server[:port])
+
+            if model
+              model.update(uid: server[:id], hostname: server[:status][:name])
+            else
+              model ||= Server.create(
+                uid: server[:id],
+                hostname: server[:status][:name],
+                game: server[:game],
+                address: server[:address],
+                port: server[:port]
+              )
+            end
 
             Report.create(
               server_id: model.id,

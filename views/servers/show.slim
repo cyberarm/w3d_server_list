@@ -1,3 +1,6 @@
+- content_for :page_title
+  = "#{@server[:status][:name]}"
+
 .container.m3
   - @server = W3DServerList::MemStore.data[:server_list].find { |s| s[:id] == params[:id] }
 
