@@ -1,0 +1,51 @@
+.container.m3
+  h1.center Test Session: #{@test_session.event_id}
+  p.center = @test_session.start_time.strftime("%B %e, %Y %H:%M %Z")
+  h1.m1.center = @test_session.title
+
+  .m1
+    - if @test_session.start_time > Time.now
+      h2.center This test has not started yet.
+    - elsif Time.now < @test_session.start_time + 3.hours
+      h2.center This test has not concluded, data incomplete!
+
+  h1.m1.center Report
+  h2.center Players present during session:
+  - unless @test_session_players.empty?
+    .m1.list_group.white_links
+      .list_item
+        .row.fno_wrap
+          span.g1
+            b Nickname
+          span.si_mapname
+            b Join Time
+          span.g1
+            b Duration
+      - @test_session_players.each do |player|
+        .list_item
+          .row.fno_wrap
+            span.g1=player.nickname
+            span.si_mapname=player.join_time.strftime("%B %e, %Y %H:%M:%S %Z")
+            span.g1=seconds_to_duration(player.duration)
+  - else
+    p.center No players have joined this session.
+
+  h2.m1.center Testers absent (#{@test_session_absent_testers.count} of #{W3DServerList::MemStore.data.dig(:tester_roster, :users)&.count || '?'}):
+  - unless @test_session_absent_testers.empty?
+    .m1.list_group.white_links
+      .list_item
+        .row.fno_wrap
+          span.si_mapname
+            b Forum Name
+          span.g1
+            b Nickname
+      - @test_session_absent_testers.each do |tester|
+        .list_item
+          .row.fno_wrap
+            span.si_mapname=tester[:name]
+            span.g1=tester[:alternate]
+  - else
+    p.center All testers were recorded as present.
+
+  p.m3.center
+    a href=url("/test_sessions/#{@test_session.event_id}/export") EXPORT DATA (CSV)

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_02_10_130415) do
+ActiveRecord::Schema[7.0].define(version: 2022_09_19_182546) do
   create_table "reports", force: :cascade do |t|
     t.integer "server_id"
     t.string "map_name"
@@ -27,6 +27,27 @@ ActiveRecord::Schema[7.0].define(version: 2022_02_10_130415) do
     t.string "game"
     t.string "address"
     t.integer "port"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "test_players", force: :cascade do |t|
+    t.integer "test_session_id"
+    t.string "nickname"
+    t.string "server_game"
+    t.string "server_name"
+    t.string "server_address"
+    t.datetime "join_time"
+    t.datetime "leave_time"
+    t.integer "duration"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "test_sessions", force: :cascade do |t|
+    t.integer "event_id"
+    t.string "title"
+    t.datetime "start_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

@@ -16,6 +16,9 @@ html lang="en"
       .container.white_links
         a.nav_label href=url("/") W3D Server List
 
+        - if authorized_to_view_test_sessions?
+          a.nav_label href=url("/test_sessions") Test Sessions
+
         / label.btn.btn_primary.navbar_toggler for="menu_toggle"
         /   img.icon src="/icons/barsHorizontal.png"
         / input#menu_toggle type="checkbox"

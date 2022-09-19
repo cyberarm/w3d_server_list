@@ -1,5 +1,6 @@
-require "async/http/internet"
-require "async/http/client"
+# require "async/http/internet"
+# require "async/http/client"
+require "excon"
 require "sucker_punch"
 
 require "sinatra/base"
@@ -18,18 +19,23 @@ require "sinatra/activerecord"
 # require "uglifier"
 
 require_relative "memstore"
-require_relative "fetch_worker"
-require_relative "repair_worker"
+require_relative "workers/fetch_worker"
+require_relative "workers/repair_worker"
+require_relative "workers/roster_worker"
 
 require_relative "controllers/server"
+require_relative "controllers/test_sessions"
 
 require_relative "models/server"
 require_relative "models/report"
+require_relative "models/test_session"
+require_relative "models/test_player"
 
 class W3DServerList
   NET_HOST = "localhost"
   NET_PORT = 9292
   SESSION_SECRET = "CHANGEME"
+  TEST_SESSIONS_TOKEN = JSON.parse(File.read("config.json"), symbolize_names: true)[:test_sessions_token]
 
   class App < Sinatra::Application
     set :root, Dir.pwd
@@ -58,11 +64,17 @@ class W3DServerList
       register Sinatra::Reloader
     end
 
-    # Start data collection worker
-    W3DServerList::FetchWorker.perform_async
+    # Don't start workers when running rake tasks
+    unless defined?(Rake)
+      # Start data collection worker
+      W3DServerList::FetchWorker.perform_async
 
-    # Repair incorrectly creating a new server when its uid changes on game server restart
-    W3DServerList::RepairWorker.perform_async
+      # Repair incorrectly creating a new server when its uid changes on game server restart
+      W3DServerList::RepairWorker.perform_async
+
+      # Track attendance of test sessions
+      W3DServerList::RosterWorker.perform_async
+    end
 
     not_found do
       slim :"errors/404"

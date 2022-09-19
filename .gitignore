@@ -1,3 +1,4 @@
 _*.*
 logs/*.log
 db/*.db
+config.json

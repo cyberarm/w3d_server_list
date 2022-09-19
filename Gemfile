@@ -1,8 +1,8 @@
 source "https://rubygems.org"
 
-gem "falcon"
+gem "puma"
 
-gem "async-http"
+gem "excon"
 gem "sinatra"
 gem "sinatra-contrib"
 gem "sinatra-flash"
