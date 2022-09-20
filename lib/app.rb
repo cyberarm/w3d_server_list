@@ -35,7 +35,8 @@ class W3DServerList
   NET_HOST = "localhost"
   NET_PORT = 9292
   SESSION_SECRET = "CHANGEME"
-  TEST_SESSIONS_TOKEN = JSON.parse(File.read("config.json"), symbolize_names: true)[:test_sessions_token]
+  CONFIG = JSON.parse(File.read("config.json"), symbolize_names: true)
+  TEST_SESSIONS_TOKEN = CONFIG[:test_sessions_token]
   raise "TEST_SESSIONS_TOKEN is null or empty!" unless TEST_SESSIONS_TOKEN.to_s.length > 10
 
   class App < Sinatra::Application
@@ -63,6 +64,10 @@ class W3DServerList
 
     configure :development do
       register Sinatra::Reloader
+    end
+
+    configure :production do
+      set :cookie_options, :domain => "w3d.cyberarm.dev"
     end
 
     # Don't start workers when running rake tasks

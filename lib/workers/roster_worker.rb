@@ -26,6 +26,10 @@ class W3DServerList
       if roster_response.status == 200
         W3DServerList::MemStore.data[:tester_roster] = JSON.parse(roster_response.body, symbolize_names: true)
         W3DServerList::MemStore.data[:tester_roster_updated_at] = Time.now.utc
+
+        CONFIG[:exclude_testers].each do |nickname|
+          W3DServerList::MemStore.data.dig(:tester_roster, :users)&.delete_if { |t| t[:alternate].downcase == nickname.downcase }
+        end
       end
 
       ActiveRecord::Base.connection_pool.with_connection do

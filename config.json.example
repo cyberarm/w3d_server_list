@@ -1,3 +1,4 @@
 {
-  "test_sessions_token": "SUPER LONG SHA256 STRING"
+  "test_sessions_token": "SUPER LONG SHA256 STRING",
+  "exclude_testers": []
 }
