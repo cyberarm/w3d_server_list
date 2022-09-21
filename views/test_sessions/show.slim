@@ -30,7 +30,7 @@
   - else
     p.center No players have joined this session.
 
-  h2.m1.center Testers absent (#{@test_session_absent_testers.count} of #{W3DServerList::MemStore.data.dig(:tester_roster, :users)&.count || '?'}):
+  h2.m1.center Testers absent (#{@test_session_absent_testers.count} of #{@testing_roster&.count || '?'}):
   - unless @test_session_absent_testers.empty?
     .m1.list_group.white_links
       .list_item

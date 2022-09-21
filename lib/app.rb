@@ -67,7 +67,7 @@ class W3DServerList
     end
 
     configure :production do
-      set :cookie_options, :domain => "w3d.cyberarm.dev"
+      set :cookie_options, domain: "w3d.cyberarm.dev"
     end
 
     # Don't start workers when running rake tasks

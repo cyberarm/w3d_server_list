@@ -12,6 +12,10 @@ class W3DServerList
 
     def authorized_to_view_test_sessions?
       if params[:token] == W3DServerList::TEST_SESSIONS_TOKEN || cookies[:test_sessions_token] == W3DServerList::TEST_SESSIONS_TOKEN
+        Sinatra::Application.set(:cookie_options) do
+          { expires: Time.now.utc + 30.days }
+        end
+
         cookies[:test_sessions_token] = W3DServerList::TEST_SESSIONS_TOKEN
 
         return true
@@ -35,13 +39,22 @@ class W3DServerList
         halt 401, "Not authorized" unless authorized_to_view_test_sessions?
 
         @test_session = TestSession.find_by(event_id: params[:event_id])
+
+        halt 404 unless @test_session
+
         @test_session_players = @test_session.test_players
         @test_session_absent_testers = []
 
-        W3DServerList::MemStore.data.dig(:tester_roster, :users).each { |t| @test_session_absent_testers << t }
+        if !@test_session.testing_roster.empty?
+          @testing_roster = JSON.parse(@test_session.testing_roster, symbolize_names: true)
+        else
+          @testing_roster = W3DServerList::MemStore.data.dig(:tester_roster, :users)
+        end
+
+        @testing_roster.each { |t| @test_session_absent_testers << t }
 
         @test_session_players.each do |player|
-          @test_session_absent_testers.delete_if { |t| t[:alternate] == player.nickname }
+          @test_session_absent_testers.delete_if { |t| t[:alternate].downcase == player.nickname.downcase }
         end
 
         halt 404 unless @test_session

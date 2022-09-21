@@ -113,6 +113,13 @@ class W3DServerList
             end
           end
         end
+
+        # Store the roster at time of test, less 30 minutes.
+        TestSession.all.where(start_time: Time.now.utc.., testing_roster: "").each do |test_session|
+          next unless W3DServerList::MemStore.data.dig(:tester_roster, :users) && Time.now.utc >= (test_session.start_time - 30.minutes)
+
+          test_session.update(testing_roster: JSON.dump(W3DServerList::MemStore.data.dig(:tester_roster, :users)))
+        end
       end
     end
 
