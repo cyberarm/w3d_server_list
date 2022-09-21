@@ -64,7 +64,25 @@ class W3DServerList
       get "/:event_id/export?" do
         halt 401, "Not authorized" unless authorized_to_view_test_sessions?
 
-        halt 500, "Not available yet."
+        test_session = TestSession.find_by(event_id: params[:event_id])
+        testing_roster = if !test_session.testing_roster.empty?
+                          JSON.parse(test_session.testing_roster, symbolize_names: true)
+                        else
+                          W3DServerList::MemStore.data.dig(:tester_roster, :users)
+                        end
+
+        halt 404 unless test_session
+
+        content_type ".csv"
+        attachment("#{test_session.event_id}.csv")
+
+        CSV.generate do |csv|
+          csv << %w[nickname server_game server_name server_address join_time leave_time duration tester]
+          test_session.test_players.each do |player|
+            tester = testing_roster.map { |t| t[:alternate].downcase }.include?(player.nickname.downcase)
+            csv << [player.nickname, player.server_game, player.server_name, player.server_address, player.join_time, player.leave_time, player.duration, tester]
+          end
+        end
       end
     end
   end

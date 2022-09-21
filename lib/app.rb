@@ -1,6 +1,7 @@
 # require "async/http/internet"
 # require "async/http/client"
 require "excon"
+require "csv"
 require "sucker_punch"
 
 require "sinatra/base"

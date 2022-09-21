@@ -18,7 +18,6 @@ class W3DServerList
       refresh_interval = 5 * 60 # Update every 5 minutes
       W3DServerList::FetchWorker.perform_in(refresh_interval)
 
-
       # fetch server list
       # parse
       server_list = nil
@@ -69,44 +68,45 @@ class W3DServerList
             test_session = TestSession.find_by(start_time: 4.hours.ago..Time.now)
 
             if test_session
-              # TODO: Track when a player leaves
               present_test_players = []
 
               server[:status][:players].each do |player|
                 test_player = TestPlayer.find_by(test_session_id: test_session.id, nickname: player[:nick])
 
                 if test_player
-                  present_test_players << test_player
-
                   test_player.update(
                     nickname: player[:nick],
                     server_game: server[:game],
                     server_name: server[:status][:name],
-                    server_address:  "#{server[:address]}:#{server[:port]}",
+                    server_address: "#{server[:address]}:#{server[:port]}",
                     leave_time: 1.hour.from_now,
                     duration: test_player.duration + refresh_interval
                   )
                 else
-                  TestPlayer.create(
+                  test_player = TestPlayer.create(
                     test_session_id: test_session.id,
                     nickname: player[:nick],
                     server_game: server[:game],
                     server_name: server[:status][:name],
-                    server_address:  "#{server[:address]}:#{server[:port]}",
+                    server_address: "#{server[:address]}:#{server[:port]}",
                     join_time: Time.now.utc,
                     leave_time: 1.hour.from_now,
                     duration: 0
                   )
                 end
+
+                present_test_players << test_player
               end
 
               # Ensure this a "normal" array and not a ORM array where delete_if my actually DELETE the db entry
               session_test_players = test_session.test_players.map { |ply| ply }
-              session_test_players.delete_if { |ply| present_test_players.any? {|tply| tply.id == ply.id } }
+              session_test_players.delete_if { |ply| present_test_players.find { |tply| tply.id == ply.id } }
 
               # Player is absent/Left
               session_test_players.each do |player|
                 next unless player.leave_time > Time.now
+                # Prevent incorrectly setting player as left and incrementing their duration when there is another testing server running
+                next unless player.server_game == server[:game]
 
                 player.update(leave_time: Time.now, duration: player.duration + refresh_interval)
               end
