@@ -22,7 +22,9 @@
           span.g1
             b Duration
       - @test_session_players.each do |player|
-        .list_item
+        - tester = @testing_roster.find { |t| t[:alternate].downcase == player.nickname.downcase }
+
+        .list_item class="#{tester ? 'tester_present' : ''}"
           .row.fno_wrap
             span.g1=player.nickname
             span.si_mapname=player.join_time.strftime("%B %e, %Y %H:%M:%S %Z")
@@ -40,7 +42,7 @@
           span.g1
             b Nickname
       - @test_session_absent_testers.each do |tester|
-        .list_item
+        .list_item.tester_absent
           .row.fno_wrap
             span.si_mapname=tester[:name]
             span.g1=tester[:alternate]
