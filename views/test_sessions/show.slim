@@ -19,7 +19,7 @@
             b Nickname
           span.si_mapname
             b Join Time
-          span.g1
+          span.si_time_left
             b Duration
       - @test_session_players.each do |player|
         - tester = @testing_roster.find { |t| t[:alternate].downcase == player.nickname.downcase }
@@ -28,7 +28,7 @@
           .row.fno_wrap
             span.g1=player.nickname
             span.si_mapname=player.join_time.strftime("%B %e, %Y %H:%M:%S %Z")
-            span.g1=seconds_to_duration(player.duration)
+            span.si_time_left=seconds_to_duration(player.duration)
   - else
     p.center No players have joined this session.
 

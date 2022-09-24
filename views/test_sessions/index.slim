@@ -5,7 +5,7 @@
     .m1.list_group.white_links
       .list_item
         .row.fno_wrap
-          span.g1
+          span.pi_team
             b ID
           span.si_mapname
             b Title
@@ -14,35 +14,38 @@
       - @active_test_sessions.each do |session|
         a.list_item href=url("/test_sessions/#{session.event_id}")
           .row.fno_wrap
-            span.g1=session.event_id
+            span.pi_team=session.event_id
             span.si_mapname=session.title
             span.g1=session.start_time.strftime("%B %e, %Y %H:%M %Z")
   - else
     p.center No active sessions.
 
   h2.m1.center Upcoming Sessions
-  .m1.list_group.white_links
-    .list_item
-      .row.fno_wrap
-        span.g1
-          b ID
-        span.si_mapname
-          b Title
-        span.g1
-          b Start Time
-    - @upcoming_test_sessions.each do |session|
-      a.list_item href=url("/test_sessions/#{session.event_id}")
+  - unless @upcoming_test_sessions.empty?
+    .m1.list_group.white_links
+      .list_item
         .row.fno_wrap
-          span.g1=session.event_id
-          span.si_mapname=session.title
-          span.g1=session.start_time.strftime("%B %e, %Y %H:%M %Z")
+          span.pi_team
+            b ID
+          span.si_mapname
+            b Title
+          span.g1
+            b Start Time
+      - @upcoming_test_sessions.each do |session|
+        a.list_item href=url("/test_sessions/#{session.event_id}")
+          .row.fno_wrap
+            span.pi_team=session.event_id
+            span.si_mapname=session.title
+            span.g1=session.start_time.strftime("%B %e, %Y %H:%M %Z")
+  - else
+    p.center No upcoming sessions.
 
   h2.m1.center Session Reports
   - unless @test_session_reports.empty?
     .m1.list_group.white_links
       .list_item
         .row.fno_wrap
-          span.g1
+          span.pi_team
             b ID
           span.si_mapname
             b Title
@@ -51,7 +54,7 @@
       - @test_session_reports.each do |session|
         a.list_item href=url("/test_sessions/#{session.event_id}")
           .row.fno_wrap
-            span.g1=session.event_id
+            span.pi_team=session.event_id
             span.si_mapname=session.title
             span.g1=session.start_time.strftime("%B %e, %Y %H:%M %Z")
   - else
@@ -61,12 +64,12 @@
   .m1.list_group.white_links
     .list_item
       .row.fno_wrap
-        span.g1
+        span.si_mapname
           b Forum Name
         span.g1
           b Nickname
     - W3DServerList::MemStore.data.dig(:tester_roster, :users)&.each do |player|
       .list_item
         .row.fno_wrap
-          span.g1=player[:name]
+          span.si_mapname=player[:name]
           span.g1=player[:alternate]
