@@ -10,7 +10,7 @@ class W3DServerList
 
     def perform
       # Schedule next run before crashy code
-      W3DServerList::RepairWorker.perform_in(60 * 60) # Update every hour
+      W3DServerList::RosterWorker.perform_in(60 * 60) # Update every hour
 
       # Fetch Test Events
       events_response = Excon.get("https://secure.w3dhub.com/apis/w3dhub/1/get-testing-times", DEFAULT_HEADERS)
