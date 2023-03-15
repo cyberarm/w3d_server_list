@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_09_21_133026) do
+ActiveRecord::Schema[7.0].define(version: 2023_03_15_190753) do
   create_table "reports", force: :cascade do |t|
     t.integer "server_id"
     t.string "map_name"
@@ -19,6 +19,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_133026) do
     t.string "remaining"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "max_players", default: 0
+    t.index ["server_id", "created_at"], name: "index_reports_on_server_id_and_created_at"
+    t.index ["server_id"], name: "index_reports_on_server_id"
   end
 
   create_table "servers", force: :cascade do |t|
@@ -29,6 +32,9 @@ ActiveRecord::Schema[7.0].define(version: 2022_09_21_133026) do
     t.integer "port"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "map_name", default: ""
+    t.integer "player_count", default: 0
+    t.integer "max_players", default: 0
   end
 
   create_table "test_players", force: :cascade do |t|

@@ -1,10 +1,11 @@
 - content_for :page_title
-  = "#{@server[:status][:name]}"
+  = "#{@server.hostname}"
+
+- @gsh_server = W3DServerList::MemStore.data[:server_list].find { |s| s[:address] == @server.address && s[:port] == @server.port }
+- last_report = @server.reports.last
 
 .container.m3
-  - @server = W3DServerList::MemStore.data[:server_list].find { |s| s[:id] == params[:id] }
-
-  h1.center=@server[:status][:name]
+  h1.center=@server.hostname
   .m1
     -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
     .list_group.white_links
@@ -17,40 +18,49 @@
           span.si_player_count Player Count
       .list_item
         .row.fno_wrap
-          span.si_game=@server[:game]
-          span.g1=@server[:status][:map]
-          span.si_time=server_match_time(@server)
-          span.si_time_left=@server[:status][:remaining]
-          span.si_player_count #{@server[:status][:numplayers]}/#{@server[:status][:maxplayers]}
+          span.si_game=@server.game
+          span.g1=@server.map_name
+          span.si_time=server_match_time(@gsh_server)
+          span.si_time_left=@gsh_server ? @gsh_server[:status][:remaining] : "00:00:00"
+          span.si_player_count #{@server.player_count}/#{@server.max_players}
 
-  h2.m3.center Players
-  .list_group.white_links.m1
-    .list_item
-      .row.fno_wrap
-        span.pi_team Team
-        span.g1 Nickname
-        span.pi_score Score
-        span.pi_kills Kills
-        span.pi_deaths Deaths
-        span.pi_kd_ratio K/D Ratio
-    - @server[:status][:players].sort_by { |pl| pl[:score] }.reverse.each do |player|
-      - next if player[:nick] =~ /GDI|Nod/
+  - if @gsh_server
+    h2.m3.center Players
+    .list_group.white_links.m1
       .list_item
         .row.fno_wrap
-          span.pi_team=@server[:status][:teams][player[:team]][:name]
-          span.g1=player[:nick]
-          span.pi_score=player[:score]
-          span.pi_kills=player[:kills]
-          span.pi_deaths=player[:deaths]
-          span.pi_kd_ratio=kd_ratio(player)
+          span.pi_team Team
+          span.g1 Nickname
+          span.pi_score Score
+          span.pi_kills Kills
+          span.pi_deaths Deaths
+          span.pi_kd_ratio K/D Ratio
+      - @gsh_server[:status][:players].sort_by { |pl| pl[:score] }.reverse.each do |player|
+        - next if player[:nick] =~ /GDI|Nod/
+        .list_item
+          .row.fno_wrap
+            span.pi_team=@gsh_server[:status][:teams][player[:team]][:name]
+            span.g1=player[:nick]
+            span.pi_score=player[:score]
+            span.pi_kills=player[:kills]
+            span.pi_deaths=player[:deaths]
+            span.pi_kd_ratio=kd_ratio(player)
+  - else
+    h3.m3.center Player list unavailable, server appears offline.
 
   h2.m3.center Peak Players Over Time (week)
+  - if last_report
+    p.center
+      i=graph_timespan(@server, last_report, :week)
   div
-    canvas id="players_over_time" data-data="#{player_count(@server[:id], :week, :max)}"
+    canvas id="players_over_time" data-data="#{player_count(@server, last_report, :week, :max)}"
 
   h2.m3.center Average Players Over Time (month)
+  - if last_report
+    p.center
+      i=graph_timespan(@server, last_report, :month)
   div
-    canvas id="average_players_over_time" data-data="#{player_count(@server[:id], :month, :average)}"
+    canvas id="average_players_over_time" data-data="#{player_count(@server, last_report, :month, :average)}"
 
 script src="https://cdn.jsdelivr.net/npm/chart.js"
 javascript:

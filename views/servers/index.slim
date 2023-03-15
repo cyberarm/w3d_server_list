@@ -3,18 +3,43 @@
   p Last refresh: #{W3DServerList::MemStore.data[:server_list_updated_at].strftime("%Y-%m-%d %H:%M:%S %Z")}
 
   .m1
-    -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
-    .list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.si_game Game
-          span.si_hostname.g1 Hostname
-          span.si_mapname Map Name
-          span.si_player_count Player Count
-      - W3DServerList::MemStore.data[:server_list].each do |server|
-        a.list_item href=url("/server/#{server[:id]}")
+    h2.center Online Servers (#{@online_servers.size})
+    - if @online_servers.empty?
+      h3.center No online servers
+    - else
+      -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
+      .list_group.white_links
+        .list_item
           .row.fno_wrap
-            span.si_game=server[:game]
-            span.si_hostname.g1=server[:status][:name]
-            span.si_mapname=server[:status][:map]
-            span.si_player_count #{server[:status][:numplayers]}/#{server[:status][:maxplayers]}
+            span.si_game Game
+            span.si_hostname.g1 Hostname
+            span.si_mapname Map Name
+            span.si_player_count Player Count
+        - @online_servers.each do |server|
+          a.list_item href=url("/server/#{server.uid}")
+            .row.fno_wrap
+              span.si_game=server.game
+              span.si_hostname.g1=server.hostname
+              span.si_mapname=server.map_name
+              span.si_player_count #{server.player_count}/#{server.max_players}
+
+  .m3
+    h2.center Offline Servers (#{@offline_servers.size})
+    - if @offline_servers.empty?
+      h3.center No offline servers
+    - else
+      -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
+      .list_group.white_links
+        .list_item
+          .row.fno_wrap
+            span.si_game Game
+            span.si_hostname.g1 Hostname
+            span.si_mapname Map Name
+            span.si_player_count Player Count
+        - @offline_servers.each do |server|
+          a.list_item href=url("/server/#{server.uid}")
+            .row.fno_wrap
+              span.si_game=server.game
+              span.si_hostname.g1=server.hostname
+              span.si_mapname=server.map_name
+              span.si_player_count #{server.player_count}/#{server.max_players}

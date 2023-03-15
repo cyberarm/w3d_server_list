@@ -51,7 +51,7 @@
             b Title
           span.g1
             b Start Time
-      - @test_session_reports.each do |session|
+      - @test_session_reports.order(start_time: :desc).each do |session|
         a.list_item href=url("/test_sessions/#{session.event_id}")
           .row.fno_wrap
             span.pi_team=session.event_id

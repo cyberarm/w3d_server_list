@@ -3,6 +3,7 @@
 require "excon"
 require "csv"
 require "sucker_punch"
+require "sassc"
 
 require "sinatra/base"
 
@@ -35,8 +36,8 @@ require_relative "models/test_player"
 class W3DServerList
   NET_HOST = "localhost"
   NET_PORT = 9292
-  SESSION_SECRET = "CHANGEME"
   CONFIG = JSON.parse(File.read("config.json"), symbolize_names: true)
+  SESSION_SECRET = CONFIG[:session_secret]
   TEST_SESSIONS_TOKEN = CONFIG[:test_sessions_token]
   raise "TEST_SESSIONS_TOKEN is null or empty!" unless TEST_SESSIONS_TOKEN.to_s.length > 10
 
@@ -93,15 +94,27 @@ class W3DServerList
 
     get "/css/application.css" do
       content_type "text/css"
+      expires 60 * 60 * 24 * 7, :public
 
-      sass :application
+      string = "@import \"./views/application\""
+
+      scss = SassC::Sass2Scss.convert(string)
+      SassC::Engine.new(scss, style: :compressed).render
     end
 
     get "/?" do
+      servers = Server.all.order(player_count: :desc, game: :asc)
+      @online_servers = servers.select { |s| s.updated_at >= 6.minutes.ago } #Server.all.where(Server.arel_table[:updated_at].gt(6.minutes.ago))
+      @offline_servers = servers.select { |s| s.updated_at < 6.minutes.ago } #Server.all.where(Server.arel_table[:updated_at].lt(6.minutes.ago))
+
       slim :"servers/index"
     end
 
     get "/server/:id?" do
+      @server = Server.find_by(uid: params[:id])
+
+      halt 404 unless @server
+
       slim :"servers/show"
     end
 

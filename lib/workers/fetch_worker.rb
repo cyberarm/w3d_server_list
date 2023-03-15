@@ -34,17 +34,30 @@ class W3DServerList
       ActiveRecord::Base.connection_pool.with_connection do
         server_list.each do |server|
           ActiveRecord::Base.transaction do
-            model = Server.find_by(uid: server[:id]) || Server.find_by(address: server[:address], port: server[:port])
+            static_uid = Digest::SHA256.hexdigest("#{server[:address]}:#{server[:port]}")
+
+            model = Server.find_by(uid: static_uid) || Server.find_by(address: server[:address], port: server[:port])
 
             if model
-              model.update(uid: server[:id], hostname: server[:status][:name])
+              model.update(
+                uid: static_uid,
+                hostname: server[:status][:name],
+                game: server[:game],
+                map_name: server[:status][:map],
+                player_count: server[:status][:numplayers] || 0,
+                max_players: server[:status][:maxplayers] || 0,
+                updated_at: Time.now.utc # Explicitly update :updated_at column
+              )
             else
               model ||= Server.create(
-                uid: server[:id],
+                uid: static_uid,
                 hostname: server[:status][:name],
                 game: server[:game],
                 address: server[:address],
-                port: server[:port]
+                port: server[:port],
+                map_name: server[:status][:map],
+                player_count: server[:status][:numplayers] || 0,
+                max_players: server[:status][:maxplayers] || 0
               )
             end
 
@@ -52,6 +65,7 @@ class W3DServerList
               server_id: model.id,
               map_name: server[:status][:map],
               player_count: server[:status][:numplayers] || 0,
+              max_players: server[:status][:maxplayers] || 0,
               started_at: server[:status][:started],
               remaining: server[:status][:remaining]
             )
