@@ -5,9 +5,9 @@ class W3DServerList
 
       diff = Time.now.to_i - Time.parse(gsh_server[:status][:started]).to_i
 
-      hours   = diff / (1000 * 60 * 60)
-      minutes = diff / (1000 * 60) % 60
-      seconds = diff /  1000 % 60
+      hours   = diff / (60 * 60)
+      minutes = (diff / 60) % 60
+      seconds = diff % 60
 
       format("%02d:%02d:%02d", hours.round, minutes.round, seconds.round)
     end
