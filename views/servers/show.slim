@@ -37,9 +37,13 @@
           span.pi_kd_ratio K/D Ratio
       - @gsh_server[:status][:players].sort_by { |pl| pl[:score] }.reverse.each do |player|
         - next if player[:nick] =~ /GDI|Nod/
+
+        - player_team = @gsh_server[:status][:teams][player[:team]]
+        - next unless player_team
+
         .list_item
           .row.fno_wrap
-            span.pi_team=@gsh_server[:status][:teams][player[:team]][:name]
+            span.pi_team=player_team[:name]
             span.g1=player[:nick]
             span.pi_score=player[:score]
             span.pi_kills=player[:kills]
