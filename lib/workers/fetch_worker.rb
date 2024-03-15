@@ -3,7 +3,8 @@ class W3DServerList
     include SuckerPunch::Job
 
     USER_AGENT = "Cyberarm's Server List".freeze
-    END_POINT = "https://gsh.w3dhub.com/listings/getAll/v2?statusLevel=2".freeze
+    # END_POINT = "https://gsh.w3dhub.com/listings/getAll/v2?statusLevel=2".freeze
+    END_POINT = "https://gsh.w3d.cyberarm.dev/listings/getAll/v2?statusLevel=2".freeze
     # DEFAULT_HEADERS = [
     #   ["User-Agent", USER_AGENT],
     #   ["Accept", "application/json"]
