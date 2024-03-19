@@ -1,8 +1,12 @@
 .container.m3
   h1.center  Server List
-  p Last refresh: #{W3DServerList::MemStore.data[:server_list_updated_at].strftime("%Y-%m-%d %H:%M:%S %Z")}
+  p.center Last refresh: #{W3DServerList::MemStore.data[:server_list_updated_at].strftime("%Y-%m-%d %H:%M:%S %Z")}
+  br/
+  p.center Times displayed on charts are in your local timezone, rounded to the nearest hour.
 
-  h2.m1.center Peak Players Over Time (week)
+  h2.m1.center Peak Players This Last Week
+  p.center Includes Command & Conquer Renegade, Mods, and Standalone W3D based games.
+  br/
   p.center
     i=game_graph_timespan(1.week.ago.utc)
   div
