@@ -29,6 +29,7 @@ GEM
     concurrent-ruby (1.2.3)
     connection_pool (2.4.1)
     crass (1.0.6)
+    csv (3.2.8)
     drb (2.2.1)
     erubi (1.12.0)
     excon (0.110.0)
@@ -103,8 +104,8 @@ GEM
     slim (5.2.1)
       temple (~> 0.10.0)
       tilt (>= 2.1.0)
-    sqlite3 (1.7.2-x64-mingw-ucrt)
-    sqlite3 (1.7.2-x86_64-linux)
+    sqlite3 (1.7.3-x64-mingw-ucrt)
+    sqlite3 (1.7.3-x86_64-linux)
     sucker_punch (3.2.0)
       concurrent-ruby (~> 1.0)
     temple (0.10.3)
@@ -120,6 +121,7 @@ PLATFORMS
 
 DEPENDENCIES
   activerecord
+  csv
   excon
   kaminari
   puma

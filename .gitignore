@@ -1,4 +1,4 @@
 _*.*
 logs/*.log
-db/*.db
+db/*.db*
 config.json

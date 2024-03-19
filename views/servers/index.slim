@@ -2,44 +2,50 @@
   h1.center  Server List
   p Last refresh: #{W3DServerList::MemStore.data[:server_list_updated_at].strftime("%Y-%m-%d %H:%M:%S %Z")}
 
-  .m1
-    h2.center Online Servers (#{@online_servers.size})
-    - if @online_servers.empty?
-      h3.center No online servers
-    - else
-      -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
-      .list_group.white_links
-        .list_item
-          .row.fno_wrap
-            span.si_game Game
-            span.si_hostname.g1 Hostname
-            span.si_mapname Map Name
-            span.si_player_count Player Count
-        - @online_servers.each do |server|
-          a.list_item href=url("/server/#{server.uid}")
-            .row.fno_wrap
-              span.si_game=server.game
-              span.si_hostname.g1=server.hostname
-              span.si_mapname=server.map_name
-              span.si_player_count #{server.player_count}/#{server.max_players}
+  h2.m1.center Peak Players Over Time (week)
+  p.center
+    i=game_graph_timespan(1.week.ago.utc)
+  div
+    canvas id="players_over_time" data-data="#{game_player_count(nil, :week, :max)}"
 
-  .m3
-    h2.center Offline Servers (#{@offline_servers.size})
-    - if @offline_servers.empty?
-      h3.center No offline servers
-    - else
-      -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
-      .list_group.white_links
-        .list_item
+  h2.m1.center Online Servers (#{@online_servers.size})
+  - if @online_servers.empty?
+    h3.center No online servers
+  - else
+    -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
+    .list_group.white_links
+      .list_item
+        .row.fno_wrap
+          span.si_game Game
+          span.si_hostname.g1 Hostname
+          span.si_mapname Map Name
+          span.si_player_count Player Count
+      - @online_servers.each do |server|
+        a.list_item href=url("/server/#{server.uid}")
           .row.fno_wrap
-            span.si_game Game
-            span.si_hostname.g1 Hostname
-            span.si_mapname Map Name
-            span.si_player_count Player Count
-        - @offline_servers.each do |server|
-          a.list_item href=url("/server/#{server.uid}")
-            .row.fno_wrap
-              span.si_game=server.game
-              span.si_hostname.g1=server.hostname
-              span.si_mapname=server.map_name
-              span.si_player_count #{server.player_count}/#{server.max_players}
+            span.si_game=server.game
+            span.si_hostname.g1=server.hostname
+            span.si_mapname=server.map_name
+            span.si_player_count #{server.player_count}/#{server.max_players}
+
+  h2.m3.center Offline Servers (#{@offline_servers.size})
+  - if @offline_servers.empty?
+    h3.center No offline servers
+  - else
+    -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
+    .list_group.white_links
+      .list_item
+        .row.fno_wrap
+          span.si_game Game
+          span.si_hostname.g1 Hostname
+          span.si_mapname Map Name
+          span.si_player_count Player Count
+      - @offline_servers.each do |server|
+        a.list_item href=url("/server/#{server.uid}")
+          .row.fno_wrap
+            span.si_game=server.game
+            span.si_hostname.g1=server.hostname
+            span.si_mapname=server.map_name
+            span.si_player_count #{server.player_count}/#{server.max_players}
+
+== slim :"servers/charts_js_partial"

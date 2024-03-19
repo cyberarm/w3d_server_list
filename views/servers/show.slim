@@ -55,75 +55,15 @@
   h2.m3.center Peak Players Over Time (week)
   - if last_report
     p.center
-      i=graph_timespan(@server, last_report, :week)
+      i=graph_timespan(last_report, :week)
   div
     canvas id="players_over_time" data-data="#{player_count(@server, last_report, :week, :max)}"
 
   h2.m3.center Average Players Over Time (month)
   - if last_report
     p.center
-      i=graph_timespan(@server, last_report, :month)
+      i=graph_timespan(last_report, :month)
   div
     canvas id="average_players_over_time" data-data="#{player_count(@server, last_report, :month, :average)}"
 
-script src="https://cdn.jsdelivr.net/npm/chart.js"
-javascript:
-  const labels = ['Sunday 00:00','Sunday 01:00','Sunday 02:00','Sunday 03:00','Sunday 04:00','Sunday 05:00','Sunday 06:00','Sunday 07:00','Sunday 08:00','Sunday 09:00','Sunday 10:00','Sunday 11:00','Sunday 12:00','Sunday 13:00','Sunday 14:00','Sunday 15:00','Sunday 16:00','Sunday 17:00','Sunday 18:00','Sunday 19:00','Sunday 20:00','Sunday 21:00','Sunday 22:00','Sunday 23:00','Monday 00:00','Monday 01:00','Monday 02:00','Monday 03:00','Monday 04:00','Monday 05:00','Monday 06:00','Monday 07:00','Monday 08:00','Monday 09:00','Monday 10:00','Monday 11:00','Monday 12:00','Monday 13:00','Monday 14:00','Monday 15:00','Monday 16:00','Monday 17:00','Monday 18:00','Monday 19:00','Monday 20:00','Monday 21:00','Monday 22:00','Monday 23:00','Tuesday 00:00','Tuesday 01:00','Tuesday 02:00','Tuesday 03:00','Tuesday 04:00','Tuesday 05:00','Tuesday 06:00','Tuesday 07:00','Tuesday 08:00','Tuesday 09:00','Tuesday 10:00','Tuesday 11:00','Tuesday 12:00','Tuesday 13:00','Tuesday 14:00','Tuesday 15:00','Tuesday 16:00','Tuesday 17:00','Tuesday 18:00','Tuesday 19:00','Tuesday 20:00','Tuesday 21:00','Tuesday 22:00','Tuesday 23:00','Wednesday 00:00','Wednesday 01:00','Wednesday 02:00','Wednesday 03:00','Wednesday 04:00','Wednesday 05:00','Wednesday 06:00','Wednesday 07:00','Wednesday 08:00','Wednesday 09:00','Wednesday 10:00','Wednesday 11:00','Wednesday 12:00','Wednesday 13:00','Wednesday 14:00','Wednesday 15:00','Wednesday 16:00','Wednesday 17:00','Wednesday 18:00','Wednesday 19:00','Wednesday 20:00','Wednesday 21:00','Wednesday 22:00','Wednesday 23:00','Thursday 00:00','Thursday 01:00','Thursday 02:00','Thursday 03:00','Thursday 04:00','Thursday 05:00','Thursday 06:00','Thursday 07:00','Thursday 08:00','Thursday 09:00','Thursday 10:00','Thursday 11:00','Thursday 12:00','Thursday 13:00','Thursday 14:00','Thursday 15:00','Thursday 16:00','Thursday 17:00','Thursday 18:00','Thursday 19:00','Thursday 20:00','Thursday 21:00','Thursday 22:00','Thursday 23:00','Friday 00:00','Friday 01:00','Friday 02:00','Friday 03:00','Friday 04:00','Friday 05:00','Friday 06:00','Friday 07:00','Friday 08:00','Friday 09:00','Friday 10:00','Friday 11:00','Friday 12:00','Friday 13:00','Friday 14:00','Friday 15:00','Friday 16:00','Friday 17:00','Friday 18:00','Friday 19:00','Friday 20:00','Friday 21:00','Friday 22:00','Friday 23:00','Saturday 00:00','Saturday 01:00','Saturday 02:00','Saturday 03:00','Saturday 04:00','Saturday 05:00','Saturday 06:00','Saturday 07:00','Saturday 08:00','Saturday 09:00','Saturday 10:00','Saturday 11:00','Saturday 12:00','Saturday 13:00','Saturday 14:00','Saturday 15:00','Saturday 16:00','Saturday 17:00','Saturday 18:00','Saturday 19:00','Saturday 20:00','Saturday 21:00','Saturday 22:00','Saturday 23:00',];
-
-  const players_over_time_data = {
-    labels: labels,
-    datasets: [
-      {
-        label: 'Player Count',
-        backgroundColor: 'rgb(0, 99, 132)',
-        borderColor: 'rgb(0, 99, 132)',
-        data: document.getElementById('players_over_time').dataset.data.split(','),
-      },
-    ]
-  };
-
-  const players_over_time_config = {
-    type: 'line',
-    data: players_over_time_data,
-    options: {
-      scales: {
-        y: {
-          min: 0
-        }
-      }
-    }
-  };
-
-  const average_players_over_time_data = {
-    labels: labels,
-    datasets: [
-      {
-        label: 'Player Count',
-        backgroundColor: 'rgb(0, 99, 132)',
-        borderColor: 'rgb(0, 99, 132)',
-        data: document.getElementById('average_players_over_time').dataset.data.split(','),
-      },
-    ]
-  };
-
-  const average_players_over_time_config = {
-    type: 'line',
-    data: average_players_over_time_data,
-    options: {
-      scales: {
-        y: {
-          min: 0
-        }
-      }
-    }
-  };
-
-  new Chart(
-    document.getElementById('players_over_time'),
-    players_over_time_config
-  );
-
-  new Chart(
-    document.getElementById('average_players_over_time'),
-    average_players_over_time_config
-  );
+== slim :"servers/charts_js_partial"

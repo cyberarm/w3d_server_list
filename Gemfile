@@ -12,6 +12,7 @@ gem "sucker_punch"
 gem "kaminari"
 gem "sassc"
 gem "slim"
+gem "csv"
 
 gem "activerecord"
 gem "sinatra-activerecord"
