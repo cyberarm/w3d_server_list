@@ -28,7 +28,7 @@ class W3DServerList
         W3DServerList::MemStore.data[:tester_roster_updated_at] = Time.now.utc
 
         CONFIG[:exclude_testers].each do |nickname|
-          W3DServerList::MemStore.data.dig(:tester_roster, :users)&.delete_if { |t| t[:alternate].downcase == nickname.downcase }
+          W3DServerList::MemStore.data.dig(:tester_roster, :users)&.delete_if { |t| (t[:alternate] || t[:name]).downcase == nickname.downcase }
         end
       end
 
