@@ -22,7 +22,7 @@
           span.si_time_left
             b Duration
       - @test_session_players.each do |player|
-        - tester = @testing_roster.find { |t| t[:alternate].downcase == player.nickname.downcase }
+        - tester = @testing_roster.find { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
 
         .list_item class="#{tester ? 'tester_present' : ''}"
           .row.fno_wrap

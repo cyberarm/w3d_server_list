@@ -54,7 +54,7 @@ class W3DServerList
         @testing_roster.each { |t| @test_session_absent_testers << t }
 
         @test_session_players.each do |player|
-          @test_session_absent_testers.delete_if { |t| t[:alternate].downcase == player.nickname.downcase }
+          @test_session_absent_testers.delete_if { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
         end
 
         halt 404 unless @test_session
