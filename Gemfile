@@ -2,6 +2,7 @@ source "https://rubygems.org"
 
 gem "rackup"
 gem "puma"
+gem "falcon"
 
 gem "excon"
 gem "sinatra"
@@ -16,7 +17,7 @@ gem "csv"
 
 gem "activerecord"
 gem "sinatra-activerecord"
-gem "sqlite3"
+gem "sqlite3", "~>1.4"
 
 # gem "opal"
 # gem "opal-browser"
