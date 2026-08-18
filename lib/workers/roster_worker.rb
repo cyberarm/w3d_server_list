@@ -1,4 +1,4 @@
-class W3DServerList
+module W3DServerList
   class RosterWorker # Fetch Tester Roster and List of Test Events to track attendance
     include SuckerPunch::Job
 
@@ -32,11 +32,10 @@ class W3DServerList
         end
       end
 
-      ActiveRecord::Base.connection_pool.with_connection do
-        # Create record for event(s)
-        W3DServerList::MemStore.data.dig(:test_events, :events)&.each do |event|
-          TestSession.find_or_create_by(event_id: event[:eventId], title: event[:title], start_time: Time.parse(event[:forumTime]))
-        end
+      # Create record for event(s)
+      W3DServerList::MemStore.data.dig(:test_events, :events)&.each do |event|
+        test_session = TestSession.first(event_id: event[:eventId], title: event[:title], start_time: Time.parse(event[:forumTime]))
+        test_session ||= TestSession.create(event_id: event[:eventId], title: event[:title], start_time: Time.parse(event[:forumTime]))
       end
     end
   end

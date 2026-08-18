@@ -1,3 +1,5 @@
-class Server < ActiveRecord::Base
-  has_many :reports
+class Server < Sequel::Model
+  plugin :timestamps, update_on_create: true
+
+  one_to_many :reports
 end

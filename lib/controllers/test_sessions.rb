@@ -1,29 +1,5 @@
-class W3DServerList
+module W3DServerList
   class App < Sinatra::Application
-    def seconds_to_duration(seconds)
-      if seconds < 60
-        "#{seconds} seconds"
-      elsif seconds > 60 && seconds < 60 * 60
-        "#{(seconds / 60.0).round(1)} minutes"
-      else
-        "#{(seconds / 60.0 / 60.0).round(1)} hours"
-      end
-    end
-
-    def authorized_to_view_test_sessions?
-      if params[:token] == W3DServerList::TEST_SESSIONS_TOKEN || cookies[:test_sessions_token] == W3DServerList::TEST_SESSIONS_TOKEN
-        Sinatra::Application.set(:cookie_options) do
-          { expires: Time.now.utc + 30.days }
-        end
-
-        cookies[:test_sessions_token] = W3DServerList::TEST_SESSIONS_TOKEN
-
-        return true
-      end
-
-      false
-    end
-
     namespace "/test_sessions?" do
       get "/?" do
         halt 401, "Not authorized" unless authorized_to_view_test_sessions?

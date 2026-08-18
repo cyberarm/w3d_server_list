@@ -33,7 +33,7 @@ require_relative "models/report"
 require_relative "models/test_session"
 require_relative "models/test_player"
 
-class W3DServerList
+module W3DServerList
   NET_HOST = "localhost"
   NET_PORT = 9292
   CONFIG = JSON.parse(File.read("config.json"), symbolize_names: true)
@@ -116,18 +116,6 @@ class W3DServerList
       halt 404 unless @server
 
       slim :"servers/show"
-    end
-
-    def kd_ratio(player)
-      ratio = (player[:kills].to_f / player[:deaths].to_f).round(1)
-
-      if ratio == Float::INFINITY
-        player[:kills]
-      elsif ratio.nan?
-        0.0
-      else
-        ratio
-      end
     end
   end
 end

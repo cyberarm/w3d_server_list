@@ -1,4 +1,4 @@
-class W3DServerList
+module W3DServerList
   class FetchWorker
     include SuckerPunch::Job
 
@@ -32,61 +32,59 @@ class W3DServerList
       W3DServerList::MemStore.data[:server_list] = server_list.sort_by { |server| server[:status][:numplayers] }.reverse
       W3DServerList::MemStore.data[:server_list_updated_at] = Time.now.utc
 
-      ActiveRecord::Base.connection_pool.with_connection do
-        server_list.each do |server|
-          ActiveRecord::Base.transaction do
-            static_uid = Digest::SHA256.hexdigest("#{server[:address]}:#{server[:port]}")
+      server_list.each do |server|
+        DB.transaction do
+          static_uid = Digest::SHA256.hexdigest("#{server[:address]}:#{server[:port]}")
 
-            model = Server.find_by(uid: static_uid) || Server.find_by(address: server[:address], port: server[:port])
+          model = Server.first(uid: static_uid) || Server.first(address: server[:address], port: server[:port])
 
-            if model
-              model.update(
-                uid: static_uid,
-                hostname: server[:status][:name],
-                game: server[:game],
-                map_name: server[:status][:map],
-                player_count: server[:status][:numplayers] || 0,
-                max_players: server[:status][:maxplayers] || 0,
-                updated_at: Time.now.utc # Explicitly update :updated_at column
-              )
-            else
-              model ||= Server.create(
-                uid: static_uid,
-                hostname: server[:status][:name],
-                game: server[:game],
-                address: server[:address],
-                port: server[:port],
-                map_name: server[:status][:map],
-                player_count: server[:status][:numplayers] || 0,
-                max_players: server[:status][:maxplayers] || 0
-              )
-            end
-
-            Report.create(
-              server_id: model.id,
+          if model
+            model.update(
+              uid: static_uid,
+              hostname: server[:status][:name],
+              game: server[:game],
               map_name: server[:status][:map],
               player_count: server[:status][:numplayers] || 0,
               max_players: server[:status][:maxplayers] || 0,
-              started_at: server[:status][:started],
-              remaining: server[:status][:remaining]
+              updated_at: Time.now.utc # Explicitly update :updated_at column
+            )
+          else
+            model ||= Server.create(
+              uid: static_uid,
+              hostname: server[:status][:name],
+              game: server[:game],
+              address: server[:address],
+              port: server[:port],
+              map_name: server[:status][:map],
+              player_count: server[:status][:numplayers] || 0,
+              max_players: server[:status][:maxplayers] || 0
             )
           end
+
+          Report.create(
+            server_id: model.id,
+            map_name: server[:status][:map],
+            player_count: server[:status][:numplayers] || 0,
+            max_players: server[:status][:maxplayers] || 0,
+            started_at: server[:status][:started],
+            remaining: server[:status][:remaining]
+          )
         end
 
         testing_servers = server_list.select { |server| server[:channel].to_s.strip.downcase == "testing" }
 
         testing_servers.each do |server|
-          ActiveRecord::Base.transaction do
+          DB.transaction do
             # Find active test session
             # Record active players
 
-            test_session = TestSession.find_by(start_time: 4.hours.ago..Time.now)
+            test_session = TestSession.first(start_time: Time.at(Time.now.utc - 4 * 60 * 60)..Time.now.utc) # 4 hours ago
 
             if test_session
               present_test_players = []
 
               server[:status][:players].each do |player|
-                test_player = TestPlayer.find_by(test_session_id: test_session.id, nickname: player[:nick])
+                test_player = TestPlayer.first(test_session_id: test_session.id, nickname: player[:nick])
 
                 if test_player
                   test_player.update(
@@ -94,7 +92,7 @@ class W3DServerList
                     server_game: server[:game],
                     server_name: server[:status][:name],
                     server_address: "#{server[:address]}:#{server[:port]}",
-                    leave_time: 1.hour.from_now,
+                    leave_time: Time.at(Time.now.utc + 60 * 60),
                     duration: test_player.duration + refresh_interval
                   )
                 else
@@ -105,7 +103,7 @@ class W3DServerList
                     server_name: server[:status][:name],
                     server_address: "#{server[:address]}:#{server[:port]}",
                     join_time: Time.now.utc,
-                    leave_time: 1.hour.from_now,
+                    leave_time: Time.at(Time.now.utc + 60 * 60),
                     duration: 0
                   )
                 end
@@ -130,8 +128,8 @@ class W3DServerList
         end
 
         # Store the roster at time of test, less 30 minutes.
-        TestSession.all.where(start_time: Time.now.utc.., testing_roster: "").each do |test_session|
-          next unless W3DServerList::MemStore.data.dig(:tester_roster, :users) && Time.now.utc >= (test_session.start_time - 30.minutes)
+        TestSession.where(start_time: Time.now.utc.., testing_roster: "").each do |test_session|
+          next unless W3DServerList::MemStore.data.dig(:tester_roster, :users) && Time.now.utc >= (test_session.start_time - 30 * 60)
 
           test_session.update(testing_roster: JSON.dump(W3DServerList::MemStore.data.dig(:tester_roster, :users)))
         end

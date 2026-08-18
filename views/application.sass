@@ -1,3 +1,5 @@
+@use 'sass:color'
+
 $nod_color: #800000
 $gdi_color: #ff8800
 
@@ -116,10 +118,10 @@ a
   color: $accent_color
   text-decoration: none
   &:hover
-    color: lighten($accent_color, 5%)
+    color: color.adjust($accent_color, $lightness: 5%)
     text-decoration: underline
   &:active
-    color: lighten($accent_color, 5%)
+    color: color.adjust($accent_color, $lightness: 5%)
     text-decoration: underline
 
 ul
@@ -232,7 +234,7 @@ sidebar
     background: $primary_color
     color: white
     &:hover
-      background: darken($primary_color, 5%)
+      background: color.adjust($primary_color, $lightness: -5%)
   .first_input
     border-top-left-radius: 5pt
     border-top-right-radius: 5pt
@@ -406,7 +408,7 @@ sidebar
   background: $primary_color
   &:hover
     color: white
-    background: darken($primary_color, 10%)
+    background: color.adjust($primary_color, $lightness: -10%)
   &:active
     color: white
 
@@ -415,7 +417,7 @@ sidebar
   background: #353535
   &:hover
     color: white
-    background: darken(#353535, 10%)
+    background: color.adjust(#353535, $lightness: -10%)
   &:active
     color: white
 
@@ -447,25 +449,25 @@ sidebar
   color: white !important
   background-color: $primary_color
   &:hover
-    background-color: darken($primary_color, 10%)
+    background-color: color.adjust($primary_color, $lightness: -10%)
 
 .btn_secondary
   color: white !important
   background-color: #353535
   &:hover
-    background-color: darken(#353535, 10%)
+    background-color: color.adjust(#353535, $lightness: -10%)
 
 .btn_download
   color: white !important
   background-color: $accent_color
   &:hover
-    background-color: darken($accent_color, 10%)
+    background-color: color.adjust($accent_color, $lightness: -10%)
 
 .btn_danger
   color: white !important
   background-color: #800
   &:hover
-    background-color: darken(#800, 10%)
+    background-color: color.adjust(#800, $lightness: -10%)
 
 .btn_disabled
   pointer-events: none
@@ -500,7 +502,7 @@ sidebar
   position: relative
   padding: 1em
   &:hover
-    background-color: lighten(#353535, 10%)
+    background-color: color.adjust(#353535, $lightness: 10%)
 
 .float_right
   float: right
@@ -626,12 +628,12 @@ sidebar
   text-align: center
 
 .tester_present
-  background: darken(darkgreen, 10%)
+  background: color.adjust(darkgreen, $lightness: -10%)
   &:hover
     background: darkgreen
 
 
 .tester_absent
-  background: darken(darkred, 10%)
+  background: color.adjust(darkred, $lightness: -10%)
   &:hover
     background: darkred

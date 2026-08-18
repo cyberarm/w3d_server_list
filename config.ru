@@ -1,2 +1,2 @@
-require File.expand_path("lib/app", __dir__)
+require File.expand_path("roda_app", __dir__)
 run W3DServerList::App

@@ -1,4 +1,4 @@
-class W3DServerList
+module W3DServerList
   class MemStore
     @@data = {
       server_list: [],

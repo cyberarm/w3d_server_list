@@ -6,7 +6,7 @@
   .m1
     - if @test_session.start_time > Time.now
       h2.center This test has not started yet.
-    - elsif Time.now < @test_session.start_time + 3.hours
+    - elsif Time.now < @test_session.start_time + 60 * 60 * 3
       h2.center This test has not concluded, data incomplete!
 
   h1.m1.center Report
