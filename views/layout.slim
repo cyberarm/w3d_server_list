@@ -12,6 +12,7 @@ html lang="en"
       title W3D Server List
 
   body
+    .background_image[style="background-image: url(#{url "/media/images/backgrounds/#{content_for(:game_id) ? "background_#{content_for(:game_id)}" : "application_background" }.webp"})"]
     header
       .container.white_links
         a.nav_label href=url("/") W3D Server List

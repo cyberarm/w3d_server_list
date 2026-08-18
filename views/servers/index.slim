@@ -20,14 +20,19 @@
     .list_group.white_links
       .list_item
         .row.fno_wrap
-          span.si_game Game
-          span.si_hostname.g1 Hostname
-          span.si_mapname Map Name
-          span.si_player_count Player Count
+          span.si_game
+            b Game
+          span.si_hostname.g1
+            b Hostname
+          span.si_mapname
+            b Map Name
+          span.si_player_count
+            b Player Count
       - @online_servers.each do |server|
         a.list_item href=url("/server/#{server.uid}")
           .row.fno_wrap
-            span.si_game=server.game
+            span.si_game[title=server.game]
+              img[src="#{url "/media/images/app_icons/icon_#{server.game}.webp"}"]
             span.si_hostname.g1=server.hostname
             span.si_mapname=server.map_name
             span.si_player_count #{server.player_count}/#{server.max_players}
@@ -40,14 +45,19 @@
     .list_group.white_links
       .list_item
         .row.fno_wrap
-          span.si_game Game
-          span.si_hostname.g1 Hostname
-          span.si_mapname Map Name
-          span.si_player_count Player Count
+          span.si_game
+            b Game
+          span.si_hostname.g1
+            b Hostname
+          span.si_mapname
+            b Map Name
+          span.si_player_count
+            b Player Count
       - @offline_servers.each do |server|
         a.list_item href=url("/server/#{server.uid}")
           .row.fno_wrap
-            span.si_game=server.game
+            span.si_game[title=server.game]
+              img[src="#{url "/media/images/app_icons/icon_#{server.game}.webp"}"]
             span.si_hostname.g1=server.hostname
             span.si_mapname=server.map_name
             span.si_player_count #{server.player_count}/#{server.max_players}

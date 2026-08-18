@@ -83,9 +83,11 @@ module W3DServerList
     end
 
     route do |r|
+      r.public
+
       r.root do
         current_time = Time.now.utc
-        servers = Server.all.sort_by { |s| [s.player_count, s.game] }
+        servers = Server.order(Sequel.desc(:player_count), Sequel.desc(:game)).all
         @online_servers = servers.select { |s| s.updated_at >= time_minutes_ago(6) }
         @offline_servers = servers.select { |s| s.updated_at < time_minutes_ago(6) }
 
