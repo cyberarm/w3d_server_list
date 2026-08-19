@@ -14,15 +14,11 @@ html lang="en"
   body
     .background_image[style="background-image: url(#{url "/media/images/backgrounds/#{content_for(:game_id) ? "background_#{content_for(:game_id)}" : "application_background" }.webp"})"]
     header
-      .container.white_links
-        a.nav_label href=url("/") W3D Server List
+      nav
+        a href=url("/") W3D Server List
 
-        - if authorized_to_view_test_sessions?
-          a.nav_label href=url("/test_sessions") Test Sessions
-
-        / label.btn.btn_primary.navbar_toggler for="menu_toggle"
-        /   img.icon src="/icons/barsHorizontal.png"
-        / input#menu_toggle type="checkbox"
+        - if true#authorized_to_view_test_sessions?
+          a href=url("/test_sessions") Test Sessions
 
         ul
           li Servers: #{W3DServerList::MemStore.data[:server_list].count}
@@ -41,6 +37,3 @@ html lang="en"
         ul
           li
             a href="https://github.com/cyberarm/w3d_server_list" target="_source_code" Source Code
-
-  / script src="/js/opal.min.js"
-  / script src="/js/application.js"

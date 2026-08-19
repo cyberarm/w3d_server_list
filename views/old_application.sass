@@ -1,0 +1,383 @@
+@use 'sass:color'
+
+$nod_color: #800000
+$gdi_color: #ff8800
+
+$primary_color: #620
+$secondary_color: green
+$accent_color: gold
+
+$large_screen: 1200px
+$large_content_width: 1140px
+$normal_screen: 992px
+$normal_content_width: 960px
+$tablet_screen: 768px
+$tablet_content_width: 720px
+$small_screen: 576px
+$small_content_width: 540px
+
+*
+  margin: 0px
+  box-sizing: border-box
+
+body
+  color: white
+  font-family: Noto Sans, sans-serif
+  background: #252525
+
+header
+  display: flex
+  align-items: center
+  flex-flow: row nowrap
+  justify-content: flex-start
+  padding: 1em
+  background: #000d
+  box-shadow: 0 0 3px black
+  position: sticky
+  top: 0
+  z-index: 1
+  ul
+    display: flex
+    flex-flow: row
+    flex-direction: row
+    padding-left: 0px
+    li
+      &:not(:first-child)
+        padding-left: 1em
+  .container
+    display: flex
+    align-items: center
+    justify-content: space-between
+    flex-wrap: wrap
+  .nav_label
+    color: white
+    font-size: 1.25em
+    font-weight: bold
+    margin-right: 1rem
+  .navbar
+    display: flex
+    flex: 1
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+  .navbar_toggler
+    display: none
+    cursor: pointer
+    padding: 0.5em 1em
+    border: solid 1px rgba(0, 0, 0, 0.5)
+    @media screen and (max-width: $normal_screen)
+      display: block
+  #menu_toggle
+    display: none
+    &:not(:checked) ~ .navbar
+      @media screen and (max-width: $normal_screen)
+        display: none
+    &:checked ~ .navbar
+      @media screen and (max-width: $normal_screen)
+        display: flex
+        flex-direction: column
+        flex-basis: 100%
+        align-items: flex-start
+    &:checked ~ .navbar ul
+      @media screen and (max-width: $normal_screen)
+        flex-direction: column
+        align-items: flex-start
+    &:checked ~ .navbar ul li
+      @media screen and (max-width: $normal_screen)
+        line-height: 3rem
+    &:checked ~ .navbar ul li:not(:first-child)
+      @media screen and (max-width: $normal_screen)
+        padding: 0
+
+
+
+main
+  // padding-top: 3em
+  padding-bottom: 3em
+  // background: #575757
+
+footer
+  text-align: center
+  padding: 1em
+  padding-bottom: 6em
+  // background: #440044
+  ul
+    display: flex
+    flex-flow: row
+    flex-wrap: wrap
+    flex-direction: row
+    justify-content: center
+    padding-left: 0px
+    margin-top: 10px
+    li
+      &:not(:first-child)
+        padding-left: 1em
+
+h2
+  padding: 0 0 0.5em 0
+  // border-bottom: 1px solid #444
+
+a
+  color: $accent_color
+  text-decoration: none
+  &:hover
+    color: color.adjust($accent_color, $lightness: 5%)
+    text-decoration: underline
+  &:active
+    color: color.adjust($accent_color, $lightness: 5%)
+    text-decoration: underline
+
+ul
+  list-style: none
+
+dl
+  margin-top: 0
+  margin-bottom: 1rem
+  dt
+    font-weight: normal
+  dd
+    font-weight: bold
+    margin-bottom: 1rem
+
+input[type=text], input[type=email], input[type=password], input[type=checkbox], input[type=submit], input[type=search], select, textarea
+  border-radius: 5pt
+  border: 1px solid rgba(0, 0, 0, 0.75)
+  padding: 0.5em
+  &:focus
+    position: relative
+    z-index: 2
+    outline: none
+    box-shadow: 0px 0px 3px $accent_color
+input[type=button], input[type=submit]
+  cursor: pointer
+
+content
+  flex: 0 0 75%
+  max-width: 75%
+  padding-right: 1em
+  @media screen and (max-width: $tablet_screen)
+    flex: 0 0 100%
+    max-width: 100%
+
+sidebar
+  flex: 0 0 25%
+  max-width: 25%
+  padding-left: 0.5em
+  padding-right: 1em
+  @media screen and (max-width: $tablet_screen)
+    flex: 0 0 100%
+    max-width: 100%
+
+.background_image
+  z-index: -1
+  position: fixed
+  width: 100vw
+  height: 100vh
+  background-repeat: no-repeat
+  background-size: cover
+
+.container
+  // background: rgba(100, 100, 100, 50)
+  margin: 0 auto
+  padding-left: 15px
+  padding-right: 15px
+  width: 100%
+  max-width: 540px
+  @media screen and (min-width: $small_screen)
+    max-width: $small_content_width
+  @media screen and (min-width: $tablet_screen)
+    max-width: $tablet_content_width
+  @media screen and (min-width: $normal_screen)
+    max-width: $normal_content_width
+  @media screen and (min-width: $large_screen)
+    max-width: $large_content_width
+
+.white_links
+  a
+    color: #ddd
+    text-decoration: none
+    &:hover
+      color: #fff
+    &:active
+      color: #fff
+
+.icon
+  height: 1.75em
+
+.spinner
+  @keyframes rotation
+    from
+      transform: rotate(0deg)
+    to
+      transform: rotate(359deg)
+
+  animation: rotation 5s linear infinite
+  max-width: 100%
+  max-height: auto
+
+.row
+  display: flex
+  flex-wrap: wrap
+  flex-direction: row
+
+.column
+  display: flex
+  flex-wrap: wrap
+  flex-direction: column
+
+.disabled
+  pointer-events: none
+
+.list_group
+  display: flex
+  flex-direction: column
+
+.list_item
+  border-radius: .25em
+  background-color: #0008
+  display: block
+  position: relative
+  padding: 1em
+  margin-top: 1em
+  &:hover
+    background-color: #000d
+
+.float_right
+  float: right
+
+.float_left
+  float: left
+
+.nr_radius
+  border-top-right-radius: 0 !important
+  border-bottom-right-radius: 0 !important
+.nl_radius
+  border-top-left-radius: 0 !important
+  border-bottom-left-radius: 0 !important
+
+.center
+  text-align: center
+
+.fva
+  display: flex
+  align-items: center
+
+.fno_wrap
+  flex-wrap: nowrap
+
+.afs
+  align-self: flex-start
+
+.flex_fill
+  flex: 1 1 auto !important
+
+.np
+  padding: 0 0 0 0 !important
+
+.p3
+  padding-top: 3em
+
+.ap1
+  padding: 0em 0.5em 0em 0.5em
+
+.m1
+  margin-top: 1em
+
+.m3
+  margin-top: 3em
+
+.sp1
+  &:not(:first-child)
+    padding-left: 1em
+
+.sm1
+  &:not(:first-child)
+    margin-left: 1em
+
+.g1
+  flex-grow: 1
+
+.g0
+  flex-grow: 0
+
+.space_around
+  justify-content: space-around
+
+.space_between
+  justify-content: space-between
+
+.upload_preview
+  width: 100%
+  max-width: 330px
+  border-radius: 5pt
+
+.card
+  border-radius: .25em
+  background-color: #0008
+  display: block
+  position: relative
+  padding: 1em
+  margin-top: 1em
+
+.si_game
+  display: flex
+  align-items: center
+  margin-right: 1em
+  @media screen and (max-width: $small_screen)
+    display: none
+  img
+    width: 2em
+    vertical-align: center
+.si_hostname
+  // flex: 0 0 40%
+  // @media screen and (max-width: $small_screen)
+  //   flex: 0 0 90%
+.si_mapname
+  flex: 0 0 40%
+  @media screen and (max-width: $small_screen)
+    display: none
+.si_time
+  flex: 0 0 12%
+  @media screen and (max-width: $tablet_screen)
+    display: none
+.si_time_left
+  flex: 0 0 12%
+  @media screen and (max-width: $tablet_screen)
+    flex: 0 0 20%
+  @media screen and (max-width: $small_screen)
+    display: none
+.si_player_count
+  flex: 0 0 10%
+  text-align: center
+
+.pi_team
+  flex: 0 0 15%
+  img
+    width: 1em
+.pi_nickname
+.pi_score
+  flex: 0 0 10%
+  text-align: center
+.pi_kills
+  flex: 0 0 10%
+  text-align: center
+  @media screen and (max-width: $small_screen)
+    display: none
+.pi_deaths
+  flex: 0 0 10%
+  text-align: center
+  @media screen and (max-width: $small_screen)
+    display: none
+.pi_kd_ratio
+  flex: 0 0 20%
+  text-align: center
+
+.tester_present
+  background: color.adjust(darkgreen, $lightness: -10%)
+  &:hover
+    background: darkgreen
+
+.tester_absent
+  background: color.adjust(darkred, $lightness: -10%)
+  &:hover
+    background: darkred

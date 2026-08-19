@@ -1,65 +1,28 @@
 .container.m3
-  h1.center  Server List
-  p.center Last refresh: #{W3DServerList::MemStore.data[:server_list_updated_at].strftime("%Y-%m-%d %H:%M:%S %Z")}
-  br/
-  p.center Times displayed on charts are in your local timezone, rounded to the nearest hour.
+  .card
+    h1.center  Server List
+    p.center Last refresh: #{W3DServerList::MemStore.data[:server_list_updated_at].strftime("%Y-%m-%d %H:%M:%S %Z")}
+    br/
+    p.center Times displayed on charts are in your local timezone, rounded to the nearest hour.
 
-  h2.m1.center Peak Players This Last Week
-  p.center Includes Command & Conquer Renegade, Mods, and Standalone W3D based games.
-  br/
-  p.center
-    i=game_graph_timespan(Time.at(Time.now.utc - 60 * 60 * 24 * 7))
-  div
-    canvas id="players_over_time" data-data="#{game_player_count(nil, :week, :max)}"
+    h2.m1.center Peak Players This Last Week
+    p.center Includes Command & Conquer Renegade, Mods, and Standalone W3D based games.
+    br/
+    p.center
+      i=game_graph_timespan(Time.at(Time.now.utc - 60 * 60 * 24 * 7))
+    div
+      canvas id="players_over_time" data-data="#{game_player_count(nil, :week, :max)}"
 
-  h2.m1.center Online Servers (#{@online_servers.size})
+  h2.m3.center Online Servers (#{@online_servers.size})
   - if @online_servers.empty?
     h3.center No online servers
   - else
-    -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
-    .list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.si_game
-            b Game
-          span.si_hostname.g1
-            b Hostname
-          span.si_mapname
-            b Map Name
-          span.si_player_count
-            b Player Count
-      - @online_servers.each do |server|
-        a.list_item href=url("/server/#{server.uid}")
-          .row.fno_wrap
-            span.si_game[title=server.game]
-              img[src="#{url "/media/images/app_icons/icon_#{server.game}.webp"}"]
-            span.si_hostname.g1=server.hostname
-            span.si_mapname=server.map_name
-            span.si_player_count #{server.player_count}/#{server.max_players}
+    == render :"servers/_server_list", locals: { servers: @online_servers }
 
   h2.m3.center Offline Servers (#{@offline_servers.size})
   - if @offline_servers.empty?
     h3.center No offline servers
   - else
-    -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
-    .list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.si_game
-            b Game
-          span.si_hostname.g1
-            b Hostname
-          span.si_mapname
-            b Map Name
-          span.si_player_count
-            b Player Count
-      - @offline_servers.each do |server|
-        a.list_item href=url("/server/#{server.uid}")
-          .row.fno_wrap
-            span.si_game[title=server.game]
-              img[src="#{url "/media/images/app_icons/icon_#{server.game}.webp"}"]
-            span.si_hostname.g1=server.hostname
-            span.si_mapname=server.map_name
-            span.si_player_count #{server.player_count}/#{server.max_players}
+    == render :"servers/_server_list", locals: { servers: @offline_servers }
 
-== render :"servers/charts_js_partial"
+== render :"servers/_charts_js"
