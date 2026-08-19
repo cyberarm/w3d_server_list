@@ -1,75 +1,67 @@
 .container.m3
   h1.center  Test Sessions
-  h2.m1.center Active Sessions
-  - unless @active_test_sessions.empty?
-    .m1.list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.pi_team
-            b ID
-          span.si_mapname
-            b Title
-          span.g1
-            b Start Time
-      - @active_test_sessions.each do |session|
-        a.list_item href=url("/test_sessions/#{session.event_id}")
-          .row.fno_wrap
-            span.pi_team=session.event_id
-            span.si_mapname=session.title
-            span.g1=session.start_time.strftime("%B %e, %Y %H:%M %Z")
-  - else
-    p.center No active sessions.
+  .card.m1
+    h2.center Active Sessions
+    - unless @active_test_sessions.empty?
+      table
+        tbody
+          tr
+            th ID
+            th Title
+            th Start Time
+          - @active_test_sessions.each do |session|
+            tr
+              td=session.event_id
+              td
+                a[href=url("/test_sessions/#{session.event_id}")]=session.title
+              td=session.start_time.strftime("%B %e, %Y %H:%M %Z")
+    - else
+      p.center No active sessions.
 
-  h2.m1.center Upcoming Sessions
-  - unless @upcoming_test_sessions.empty?
-    .m1.list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.pi_team
-            b ID
-          span.si_mapname
-            b Title
-          span.g1
-            b Start Time
-      - @upcoming_test_sessions.each do |session|
-        a.list_item href=url("/test_sessions/#{session.event_id}")
-          .row.fno_wrap
-            span.pi_team=session.event_id
-            span.si_mapname=session.title
-            span.g1=session.start_time.strftime("%B %e, %Y %H:%M %Z")
-  - else
-    p.center No upcoming sessions.
+  .card.m1
+    h2.center Upcoming Sessions
+    - unless @upcoming_test_sessions.empty?
+      table
+        tbody
+          tr
+            th ID
+            th Title
+            th Start Time
+          - @upcoming_test_sessions.each do |session|
+            tr
+              td=session.event_id
+              td
+                a[href=url("/test_sessions/#{session.event_id}")]=session.title
+              td=session.start_time.strftime("%B %e, %Y %H:%M %Z")
+    - else
+      p.center No upcoming sessions.
 
-  h2.m1.center Session Reports
-  - unless @test_session_reports.empty?
-    .m1.list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.pi_team
-            b ID
-          span.si_mapname
-            b Title
-          span.g1
-            b Start Time
-      - @test_session_reports.order(start_time: :desc).each do |session|
-        a.list_item href=url("/test_sessions/#{session.event_id}")
-          .row.fno_wrap
-            span.pi_team=session.event_id
-            span.si_mapname=session.title
-            span.g1=session.start_time.strftime("%B %e, %Y %H:%M %Z")
-  - else
-    p.center No reports available.
+  .card.m1
+    h2.center Session Reports
+    - unless @test_session_reports.empty?
+      table
+        tbody
+          tr
+            th ID
+            th Title
+            th Start Time
+          - @test_session_reports.each do |session|
+            tr
+                td=session.event_id
+                td
+                  a[href=url("/test_sessions/#{session.event_id}")]=session.title
+                td=session.start_time.strftime("%B %e, %Y %H:%M %Z")
+    - else
+      p.center No reports available.
 
-  h2.m1.center Testing Roster (#{W3DServerList::MemStore.data.dig(:tester_roster, :users)&.count || '?'})
-  .m1.list_group.white_links
-    .list_item
-      .row.fno_wrap
-        span.si_mapname
-          b Forum Name
-        span.g1
-          b Nickname
-    - W3DServerList::MemStore.data.dig(:tester_roster, :users)&.each do |player|
-      .list_item
-        .row.fno_wrap
-          span.si_mapname=player[:name]
-          span.g1=player[:alternate]
+  .card.m1
+    h2.center Testing Roster (#{W3DServerList::MemStore.data.dig(:tester_roster, :users)&.count || '?'})
+    table
+      tbody
+        tr
+          th Forum Name
+          th Nickname
+        - W3DServerList::MemStore.data.dig(:tester_roster, :users)&.each do |player|
+          tr
+            td=player[:name]
+            td=player[:alternate]

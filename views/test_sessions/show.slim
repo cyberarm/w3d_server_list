@@ -1,53 +1,49 @@
 .container.m3
   h1.center Test Session: #{@test_session.event_id}
-  p.center = @test_session.start_time.strftime("%B %e, %Y %H:%M %Z")
-  h1.m1.center = @test_session.title
+  .card
+    p.center = @test_session.start_time.strftime("%B %e, %Y %H:%M %Z")
+    h1.m1.center = @test_session.title
 
-  .m1
-    - if @test_session.start_time > Time.now
-      h2.center This test has not started yet.
-    - elsif Time.now < @test_session.start_time + 60 * 60 * 3
-      h2.center This test has not concluded, data incomplete!
+    .m1
+      - if @test_session.start_time > Time.now.utc
+        h2.center This test has not started yet.
+      - elsif Time.now.utc < @test_session.start_time + 60 * 60 * 3
+        h2.center This test has not concluded, data incomplete!
 
-  h1.m1.center Report
-  h2.center Players present during session:
-  - unless @test_session_players.empty?
-    .m1.list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.g1
-            b Nickname
-          span.si_mapname
-            b Join Time
-          span.si_time_left
-            b Duration
-      - @test_session_players.each do |player|
-        - tester = @testing_roster.find { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
+  .card.m1
+    h1.center Report
+    h2.center Players present during session:
+    - unless @test_session_players.empty?
+      table
+        tbody
+          tr
+            th Nickname
+            th Join Time
+            th Duration
+          - @test_session_players.each do |player|
+            - tester = @testing_roster.find { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
+            tr
+              td=player.nickname
+              td=player.join_time.strftime("%B %e, %Y %H:%M:%S %Z")
+              td=seconds_to_duration(player.duration)
+    - else
+      p.center No players have joined this session.
 
-        .list_item class="#{tester ? 'tester_present' : ''}"
-          .row.fno_wrap
-            span.g1=player.nickname
-            span.si_mapname=player.join_time.strftime("%B %e, %Y %H:%M:%S %Z")
-            span.si_time_left=seconds_to_duration(player.duration)
-  - else
-    p.center No players have joined this session.
+  .card.m1
+    h2.center Testers absent (#{@test_session_absent_testers.count} of #{@testing_roster&.count || '?'}):
+    - unless @test_session_absent_testers.empty?
+      table
+        tbody
+          tr
+            th Forum Name
+            th Nickname
+          - @test_session_absent_testers.each do |player|
+            tr
+              td=player[:name]
+              td=player[:alternate]
 
-  h2.m1.center Testers absent (#{@test_session_absent_testers.count} of #{@testing_roster&.count || '?'}):
-  - unless @test_session_absent_testers.empty?
-    .m1.list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.si_mapname
-            b Forum Name
-          span.g1
-            b Nickname
-      - @test_session_absent_testers.each do |tester|
-        .list_item.tester_absent
-          .row.fno_wrap
-            span.si_mapname=tester[:name]
-            span.g1=tester[:alternate]
-  - else
-    p.center All testers were recorded as present.
+    - else
+      p.center All testers were recorded as present.
 
   p.m3.center
     a href=url("/test_sessions/#{@test_session.event_id}/export") EXPORT DATA (CSV)

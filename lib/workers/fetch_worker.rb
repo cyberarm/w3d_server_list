@@ -78,7 +78,7 @@ module W3DServerList
             # Find active test session
             # Record active players
 
-            test_session = TestSession.first(start_time: Time.at(Time.now.utc - 4 * 60 * 60)..Time.now.utc) # 4 hours ago
+            test_session = TestSession.first(start_time: time_hours_ago(4)..Time.now.utc) # 4 hours ago
 
             if test_session
               present_test_players = []
@@ -117,11 +117,11 @@ module W3DServerList
 
               # Player is absent/Left
               session_test_players.each do |player|
-                next unless player.leave_time > Time.now
+                next unless player.leave_time > Time.now.utc
                 # Prevent incorrectly setting player as left and incrementing their duration when there is another testing server running
                 next unless player.server_game == server[:game]
 
-                player.update(leave_time: Time.now, duration: player.duration + refresh_interval)
+                player.update(leave_time: Time.now.utc, duration: player.duration + refresh_interval)
               end
             end
           end

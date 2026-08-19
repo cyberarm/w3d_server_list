@@ -106,17 +106,20 @@ module W3DServerList
       end
 
       r.on "test_sessions" do
-        halt 401, "Not authorized" unless authorized_to_view_test_sessions?
+        r.halt 401, "Not authorized" unless authorized_to_view_test_sessions?
 
         r.on Integer do |event_id|
-          @test_session = TestSession.first(event_id: params[:event_id])
+          @test_session = TestSession.first(event_id: event_id)
 
-          halt 404 unless @test_session
+          r.halt 404 unless @test_session
 
-          if !@test_session.testing_roster.empty?
-            @testing_roster = JSON.parse(@test_session.testing_roster, symbolize_names: true)
+          @test_session_players = @test_session.test_players
+          @test_session_absent_testers = []
+
+          if @test_session.testing_roster.empty?
+            @testing_roster = W3DServerList::MemStore.data.dig(:tester_roster, :users) || []
           else
-            @testing_roster = W3DServerList::MemStore.data.dig(:tester_roster, :users)
+            @testing_roster = JSON.parse(@test_session.testing_roster, symbolize_names: true)
           end
 
           @testing_roster.each { |t| @test_session_absent_testers << t }
@@ -125,9 +128,17 @@ module W3DServerList
             @test_session_absent_testers.delete_if { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
           end
 
-          halt 404 unless @test_session
+          r.halt 404 unless @test_session
 
           view :"test_sessions/show"
+        end
+
+        r.get do
+          @active_test_sessions = TestSession.where(start_time: time_hours_ago(4)..Time.now.utc).all
+          @upcoming_test_sessions = TestSession.where(start_time: Time.now.utc..).all
+          @test_session_reports = TestSession.where(start_time: ..Time.now.utc).order(Sequel.desc(:start_time)).all
+
+          view :"test_sessions/index"
         end
       end
 
@@ -172,7 +183,7 @@ module W3DServerList
     def server_match_time(gsh_server)
       return "00:00:00" unless gsh_server
 
-      diff = Time.now.to_i - Time.parse(gsh_server[:status][:started]).to_i
+      diff = Time.now.utc.to_i - Time.parse(gsh_server[:status][:started]).to_i
 
       hours   = diff / (60 * 60)
       minutes = (diff / 60) % 60
@@ -340,7 +351,7 @@ module W3DServerList
 
     def authorized_to_view_test_sessions?
       # FIXME!
-      return false
+      return true
 
       pp request, response
       if (r && r.params[:token] == W3DServerList::TEST_SESSIONS_TOKEN) || cookies[:test_sessions_token] == W3DServerList::TEST_SESSIONS_TOKEN
