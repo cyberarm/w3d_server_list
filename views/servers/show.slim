@@ -9,28 +9,29 @@
 .container.m3
   h1.center=@server.hostname
   .m1
-    -# GAME ID, HOSTNAME, MAPNAME, PLAYERCOUNT
-    .list_group.white_links
-      .list_item
-        .row.fno_wrap
-          span.si_game
-            b Game
-          span.g1
-            b Map Name
-          span.si_time
-            b Time
-          span.si_time_left
-            b Time Left
-          span.si_player_count
-            b Player Count
-      .list_item
-        .row.fno_wrap
-          span.si_game[title=@server.game]
-            img[src="#{url "/media/images/app_icons/icon_#{@server.game}.webp"}"]
-          span.g1=@server.map_name
-          span.si_time=server_match_time(@gsh_server)
-          span.si_time_left=@gsh_server ? @gsh_server[:status][:remaining] : "00:00:00"
-          span.si_player_count #{@server.player_count}/#{@server.max_players}
+    .card.row
+      img.mr1.icon[title=@server.game src="#{url "/media/images/app_icons/icon_#{@server.game}.webp"}"]
+      .column.grow
+        b Map
+        p=@server.map_name
+        b.m1 Next Map
+        p=@gsh_server ? @gsh_server[:status][:nextmap] : "—"
+        b.m1 Region
+        p=@gsh_server ? @gsh_server[:region] : "Europe"
+      .column.grow.ml1.mr1
+        b Ping
+        p —
+        b.m1 Time
+        p=server_match_time(@gsh_server)
+        b.m1 Channel
+        p=@gsh_server ? @gsh_server[:channel] : "release"
+      .column
+        b Players
+        p #{@server.player_count}/#{@server.max_players}
+        b.m1 Time Left
+        p=@gsh_server ? @gsh_server[:status][:remaining] : "—"
+        b.m1 Version
+        p=@gsh_server ? @gsh_server[:version] : "838"
 
     .card
       h2.center Peak Players Over Time (week)
@@ -49,37 +50,47 @@
         canvas id="average_players_over_time" data-data="#{player_count(@server, last_report, :month, :average)}"
 
   - if @gsh_server
-    h2.m3.center Players
-    .list_group.white_links.m1
-      .list_item
-        .row.fno_wrap
-          span.pi_team
-            b Team
-          span.g1
-            b Nickname
-          span.pi_score
-            b Score
-          span.pi_kills
-            b Kills
-          span.pi_deaths
-            b Deaths
-          span.pi_kd_ratio
-            b K/D Ratio
-      - @gsh_server[:status][:players].sort_by { |pl| pl[:score] }.reverse.each do |player|
-        - next if player[:nick] =~ /GDI|Nod/
-
-        - player_team = @gsh_server[:status][:teams][player[:team]]
-        - next unless player_team
-
-        .list_item
-          .row.fno_wrap
-            span.pi_team[title=player_team[:name]]
-              img[src="#{url "/media/images/factions/faction_#{@server.game}_#{player_team[:name].downcase}.webp"}"]
-            span.g1=player[:nick]
-            span.pi_score=player[:score]
-            span.pi_kills=player[:kills]
-            span.pi_deaths=player[:deaths]
-            span.pi_kd_ratio=kd_ratio(player)
+    - @gsh_server[:status][:teams].each do |team|
+      - players = @gsh_server[:status][:players].select { |player| player[:team] == team[:id] }.sort_by { |player| player[:score] }.reverse
+      -# skip non-standard teams with no players
+      - next if players.size.zero? && !team[:id].between?(0, 1)
+      .card.m3
+        .row
+          img.mr1.icon[title=@server.game src="#{url "/media/images/factions/faction_#{@server.game}_#{team[:name].downcase}.webp"}"]
+          .column.grow
+            b=team[:name]
+            .row
+              .column.grow
+                b Score
+                p=team[:score]
+              .column.grow.ml1
+                b Kills
+                p=team[:kills]
+              .column.grow.ml1
+                b Deaths
+                p=team[:deaths]
+              .column.ml1
+                b Players
+                p #{players.count}/#{@server.max_players}
+        - if players.count.positive?
+          hr
+          table.player_list
+            tbody
+              tr
+                th.max Name
+                th Score
+                th Kills
+                th Deaths
+                th Ping
+                th Time
+              - players.each do |player|
+                tr
+                  td.max=player[:nick]
+                  td=player[:score]
+                  td=player[:kills]
+                  td=player[:deaths]
+                  td=player[:ping]
+                  td=player[:time]
   - else
     h3.m3.center Player list unavailable, server appears offline.
 

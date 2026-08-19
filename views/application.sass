@@ -45,6 +45,7 @@ main
   flex-grow: 1
   justify-content: center
   align-items: center
+  margin: 1em
 
 footer
   display: flex
@@ -78,6 +79,14 @@ nav
 ul
   list-style: none
   padding-left: 0px
+
+hr
+  width: 100%
+  margin-top: 1em
+  margin-bottom: 1em
+  border: none
+  height: 2pt
+  background-color: #0006
 
 .container
   display: flex
@@ -131,9 +140,25 @@ ul
     text-decoration: none
 
 .background_image
+  filter: brightness(75%)
   z-index: -1
   position: fixed
   width: 100vw
   height: 100vh
   background-repeat: no-repeat
   background-size: cover
+
+.player_list
+  border: none
+  width: 100%
+  border-spacing: 0px
+  th, td
+    text-align: left
+    padding: 0.5rem
+  :where(th, td):not(.max)
+    padding-left: 2em
+  .max
+    width: 100%
+  tr:nth-child(even)
+    background: #0006
+    border-radius: 5pt
