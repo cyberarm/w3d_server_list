@@ -10,6 +10,7 @@ require "sequel"
 
 ENV["RACK_ENV"] ||= "development"
 
+Sequel.default_timezone = :utc
 DB = Sequel.connect("sqlite://./db/#{ENV["RACK_ENV"]}.db")
 # Log sequel queries to make debugging wrong or long queries easier
 DB.loggers << Logger.new($stdout) if ENV["RACK_ENV"] == "development"

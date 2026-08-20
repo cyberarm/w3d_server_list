@@ -78,7 +78,7 @@ module W3DServerList
             # Find active test session
             # Record active players
 
-            test_session = TestSession.first(start_time: time_hours_ago(4)..Time.now.utc) # 4 hours ago
+            test_session = TestSession.first(start_time: Time.at(Time.now.utc - 60 * 60 * 4)..Time.now.utc) # 4 hours ago
 
             if test_session
               present_test_players = []
