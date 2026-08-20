@@ -19,6 +19,7 @@ body
   flex-flow: column
   color: white
   background: #252525
+  text-shadow: 0px 1.5pt 3pt #000a
   font-family: Noto Sans, sans-serif
   font-size: 1rem
   @media only screen and (max-width: 540px)
@@ -91,6 +92,21 @@ hr
   height: 2pt
   background-color: #0006
 
+table
+  border: none
+  width: 100%
+  border-spacing: 0px
+  th, td
+    text-align: left
+    padding: 0.5rem
+  :where(th, td):not(.max)
+    padding-left: 1rem
+  .max
+    width: 100%
+  tr:nth-child(even)
+    background: #0006
+    border-radius: 5pt
+
 .container
   display: flex
   flex-flow: column
@@ -152,17 +168,12 @@ hr
   background-repeat: no-repeat
   background-size: cover
 
-table
-  border: none
-  width: 100%
-  border-spacing: 0px
-  th, td
-    text-align: left
-    padding: 0.5rem
-  :where(th, td):not(.max)
-    padding-left: 1rem
-  .max
-    width: 100%
-  tr:nth-child(even)
-    background: #0006
-    border-radius: 5pt
+.tester_present
+  background-color: #060
+  &:nth-child(even)
+    background-color: #040
+
+.tester_absent
+  background-color: #800
+  &:nth-child(even)
+    background-color: #600

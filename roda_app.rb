@@ -80,6 +80,10 @@ module W3DServerList
       next exception_page(e) if ENV["RACK_ENV"] == "development"
     end
 
+    status_handler(401) do
+      view :"errors/401"
+    end
+
     status_handler(404) do
       view :"errors/404"
     end

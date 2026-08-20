@@ -22,7 +22,7 @@
             th Duration
           - @test_session_players.each do |player|
             - tester = @testing_roster.find { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
-            tr
+            tr[class="#{tester ? 'tester_present' : '' }"]
               td=player.nickname
               td=player.join_time.strftime("%B %e, %Y %H:%M:%S %Z")
               td=seconds_to_duration(player.duration)
@@ -38,7 +38,7 @@
             th Forum Name
             th Nickname
           - @test_session_absent_testers.each do |player|
-            tr
+            tr.tester_absent
               td=player[:name]
               td=player[:alternate]
 
