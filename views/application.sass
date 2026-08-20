@@ -22,8 +22,8 @@ body
   text-shadow: 0px 1.5pt 3pt #000a
   font-family: Noto Sans, sans-serif
   font-size: 1rem
-  @media only screen and (max-width: 540px)
-    font-size: 0.75rem
+  // @media only screen and (max-width: 540px)
+  //   font-size: 0.75rem
 
 
 header
@@ -93,6 +93,8 @@ hr
   background-color: #0006
 
 table
+  display: block
+  overflow: auto
   border: none
   width: 100%
   border-spacing: 0px
@@ -133,6 +135,11 @@ table
 .grow
   flex-grow: 1
 
+.crushed
+  min-width: 0
+  min-height: 0
+  overflow: auto
+
 .m1
   margin-top: 1rem
 
@@ -146,6 +153,9 @@ table
 
 .center
   text-align: center
+
+.nowrap
+  white-space: nowrap
 
 .icon
   object-fit: contain

@@ -1,12 +1,12 @@
 - servers.each do |server|
-  a.card.server_item href=url("/server/#{server.uid}")
+  a.card.server_item.nowrap href=url("/server/#{server.uid}")
     .row
       img.icon[title=server.game src="#{url "/media/images/app_icons/icon_#{server.game}.webp"}" style="margin-right: 1em"]
-      .column.grow
+      .column.grow.crushed
         b
           span=server.hostname
         span=server.map_name
-      .column.ml1.mr1
+      .column.ml1.mr1[style="flex-grow: 1 1 auto;"]
         b Players
         span #{server.player_count}/#{server.max_players}
       img.ml1.icon[src="#{url "/media/images/icons/kenney_arrow_right.png"}"]

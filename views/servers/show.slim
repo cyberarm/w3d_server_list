@@ -9,9 +9,9 @@
 .container.m3
   h1.center=@server.hostname
   .m1
-    .card.row
+    .card.row.nowrap
       img.mr1.icon[title=@server.game src="#{url "/media/images/app_icons/icon_#{@server.game}.webp"}"]
-      .column.grow
+      .column.grow.crushed
         b Map
         p=@server.map_name
         b.m1 Next Map
@@ -74,7 +74,7 @@
                 p #{players.count}/#{@server.max_players}
         - if players.count.positive?
           hr
-          table.player_list
+          table
             tbody
               tr
                 th.max Name
