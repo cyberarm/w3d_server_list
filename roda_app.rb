@@ -7,6 +7,7 @@ require "sucker_punch"
 require "sass-embedded"
 require "slim"
 require "sequel"
+require "csv"
 
 ENV["RACK_ENV"] ||= "development"
 
@@ -107,31 +108,46 @@ module W3DServerList
       end
 
       r.on "test_sessions" do
-        r.halt 401, "Not authorized" unless authorized_to_view_test_sessions?
+        r.halt 401 unless authorized_to_view_test_sessions?
 
         r.on Integer do |event_id|
           @test_session = TestSession.first(event_id: event_id)
 
           r.halt 404 unless @test_session
 
-          @test_session_players = @test_session.test_players
+          @test_session_players = @test_session.test_players.sort_by { |player| player.duration }.reverse
           @test_session_absent_testers = []
 
-          if @test_session.testing_roster.empty?
-            @testing_roster = W3DServerList::MemStore.data.dig(:tester_roster, :users) || []
+          @testing_roster = if @test_session.testing_roster.empty?
+            W3DServerList::MemStore.data.dig(:tester_roster, :users) || []
           else
-            @testing_roster = JSON.parse(@test_session.testing_roster, symbolize_names: true)
+            JSON.parse(@test_session.testing_roster, symbolize_names: true)
           end
 
-          @testing_roster.each { |t| @test_session_absent_testers << t }
+          r.is do
+            r.get do
+              @testing_roster.each { |t| @test_session_absent_testers << t }
 
-          @test_session_players.each do |player|
-            @test_session_absent_testers.delete_if { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
+              @test_session_players.each do |player|
+                @test_session_absent_testers.delete_if { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
+              end
+
+              view :"test_sessions/show"
+            end
           end
 
-          r.halt 404 unless @test_session
+          r.get "export" do
+            content_type(:csv)
+            attachment("w3dhub_test_session#{@test_session.event_id}_#{}.csv")
 
-          view :"test_sessions/show"
+            CSV.generate do |csv|
+              csv << %w[nickname server_game server_name server_address join_time leave_time duration tester]
+              @test_session.test_players.each do |player|
+                tester = @testing_roster.map { |t| t[:alternate].to_s.downcase }.include?(player.nickname.to_s.downcase)
+                csv << [player.nickname, player.server_game, player.server_name, player.server_address, player.join_time, player.leave_time, player.duration, tester]
+              end
+            end
+          end
         end
 
         r.get do
