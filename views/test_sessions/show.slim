@@ -14,33 +14,35 @@
     h1.center Report
     h2.center Players present during session:
     - unless @test_session_players.empty?
-      table
-        tbody
-          tr
-            th Nickname
-            th Join Time
-            th Duration
-          - @test_session_players.each do |player|
-            - tester = @testing_roster.find { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
-            tr[class="#{tester ? 'tester_present' : '' }"]
-              td=player.nickname
-              td=player.join_time.strftime("%B %e, %Y %H:%M:%S %Z")
-              td=seconds_to_duration(player.duration)
+      .table_overflow
+        table
+          tbody
+            tr
+              th Nickname
+              th Join Time
+              th Duration
+            - @test_session_players.each do |player|
+              - tester = @testing_roster.find { |t| (t[:alternate] || t[:name]).downcase == player.nickname.downcase || t[:name].downcase == player.nickname.downcase }
+              tr[class="#{tester ? 'tester_present' : '' }"]
+                td=player.nickname
+                td=player.join_time.strftime("%B %e, %Y %H:%M:%S %Z")
+                td=seconds_to_duration(player.duration)
     - else
       p.center No players have joined this session.
 
   .card.m1
     h2.center Testers absent (#{@test_session_absent_testers.count} of #{@testing_roster&.count || '?'}):
     - unless @test_session_absent_testers.empty?
-      table
-        tbody
-          tr
-            th Forum Name
-            th Nickname
-          - @test_session_absent_testers.each do |player|
-            tr.tester_absent
-              td=player[:name]
-              td=player[:alternate]
+      .table_overflow
+        table
+          tbody
+            tr
+              th Forum Name
+              th Nickname
+            - @test_session_absent_testers.each do |player|
+              tr.tester_absent
+                td=player[:name]
+                td=player[:alternate]
 
     - else
       p.center All testers were recorded as present.

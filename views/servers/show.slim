@@ -74,23 +74,24 @@
                 p #{players.count}/#{@server.max_players}
         - if players.count.positive?
           hr
-          table
-            tbody
-              tr
-                th.max Name
-                th Score
-                th Kills
-                th Deaths
-                th Ping
-                th Time
-              - players.each do |player|
+          .table_overflow
+            table
+              tbody
                 tr
-                  td.max=player[:nick]
-                  td=player[:score]
-                  td=player[:kills]
-                  td=player[:deaths]
-                  td=player[:ping]
-                  td=player[:time]
+                  th.max Name
+                  th Score
+                  th Kills
+                  th Deaths
+                  th Ping
+                  th Time
+                - players.each do |player|
+                  tr
+                    td.max=player[:nick]
+                    td=player[:score]
+                    td=player[:kills]
+                    td=player[:deaths]
+                    td=player[:ping]
+                    td=player[:time]
   - else
     h3.m3.center Player list unavailable, server appears offline.
 
