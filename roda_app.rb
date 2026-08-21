@@ -371,16 +371,8 @@ module W3DServerList
     end
 
     def authorized_to_view_test_sessions?
-      # FIXME!
-      return true
-
-      pp request, response
-      if (r && r.params[:token] == W3DServerList::TEST_SESSIONS_TOKEN) || cookies[:test_sessions_token] == W3DServerList::TEST_SESSIONS_TOKEN
-        Sinatra::Application.set(:cookie_options) do
-          { expires: Time.now.utc + 30.days }
-        end
-
-        cookies[:test_sessions_token] = W3DServerList::TEST_SESSIONS_TOKEN
+      if (request.params["token"] == W3DServerList::TEST_SESSIONS_TOKEN) || request.session["test_sessions_token"] == W3DServerList::TEST_SESSIONS_TOKEN
+        request.session[:test_sessions_token] = W3DServerList::TEST_SESSIONS_TOKEN
 
         return true
       end

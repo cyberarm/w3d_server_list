@@ -17,7 +17,7 @@ html lang="en"
       nav
         a href=url("/") W3D Server List
 
-        - if true#authorized_to_view_test_sessions?
+        - if authorized_to_view_test_sessions?
           a href=url("/test_sessions") Test Sessions
 
         ul
